@@ -5,6 +5,8 @@ enum MAIN_STACK {
   COACH = 'Coach',
   PROFILE = 'Profile',
   DATA = 'Data',
+  TOS = 'TermsOfService',
+  PRIVACY = 'PrivacyPolicy',
 }
 
 enum SESSION_TABS {

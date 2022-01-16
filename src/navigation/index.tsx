@@ -4,7 +4,8 @@ import {NavigationContainer, RouteProp} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import {MAIN_STACK} from 'src/constants';
-import {Home} from 'src/screens';
+import {useAuthentication} from 'src/context';
+import {Home, Authentication, TermsOfService, PrivacyPolicy} from 'src/screens';
 
 import {navigationRef} from './utils';
 
@@ -12,6 +13,9 @@ type NavigationProps = Partial<ComponentProps<typeof NavigationContainer>>;
 
 type NavigationParamList = {
   [MAIN_STACK.HOME]: undefined;
+  [MAIN_STACK.AUTH]: undefined;
+  [MAIN_STACK.TOS]: undefined;
+  [MAIN_STACK.PRIVACY]: undefined;
 };
 
 type RootRouteProps<RouteName extends keyof NavigationParamList> = RouteProp<
@@ -20,6 +24,20 @@ type RootRouteProps<RouteName extends keyof NavigationParamList> = RouteProp<
 >;
 
 const Stack = createNativeStackNavigator<NavigationParamList>();
+
+const AuthStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      initialRouteName={MAIN_STACK.AUTH}>
+      <Stack.Screen name={MAIN_STACK.AUTH} component={Authentication} />
+      <Stack.Screen name={MAIN_STACK.TOS} component={TermsOfService} />
+      <Stack.Screen name={MAIN_STACK.PRIVACY} component={PrivacyPolicy} />
+    </Stack.Navigator>
+  );
+};
 
 const AppStack = () => (
   <Stack.Navigator
@@ -32,12 +50,13 @@ const AppStack = () => (
 );
 
 const AppNavigator = (props: NavigationProps) => {
+  const {isAuthenticated, isGuestUser} = useAuthentication();
   return (
     <NavigationContainer
       ref={navigationRef}
       // onReady={(): Promise<void> => RNBootSplash.hide({fade: true})}
       {...props}>
-      <AppStack />
+      {isAuthenticated || isGuestUser ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 };

@@ -1,18 +1,12 @@
-import {
-  useContext,
-  createContext,
-  ReactNode,
-  SetStateAction,
-  Dispatch,
-} from 'react';
+import {useContext, createContext, ReactNode} from 'react';
 
 import {useToggle} from 'src/hooks';
 
 interface AuthContextValue {
   isAuthenticated: boolean;
-  toggleAuthState: Dispatch<SetStateAction<boolean>>;
+  toggleAuthState: () => void;
   isGuestUser: boolean;
-  toggleGuestUserState: Dispatch<SetStateAction<boolean>>;
+  toggleGuestUserState: () => void;
 }
 
 function createCtx<A extends {} | null>() {

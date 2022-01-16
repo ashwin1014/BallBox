@@ -13,4 +13,8 @@ const HeartIcon = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
   <Icon {...props} name="heart" />
 );
 
-export {HeartIcon};
+const BackIcon = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
+  <Icon {...props} name="arrow-back" />
+);
+
+export {HeartIcon, BackIcon};

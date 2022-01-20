@@ -10,9 +10,11 @@ import {useAuthentication} from 'src/context';
 import {TOSScreenProp, PrivacyScreenProp} from 'src/navigation/navigationProps';
 import {theme} from 'src/theme';
 
+import OTPInput from './OTPInput';
+
 const Authentication = () => {
   const {navigate} = useNavigation<TOSScreenProp & PrivacyScreenProp>();
-  const {toggleGuestUserState} = useAuthentication();
+  const {toggleGuestUserState, toggleAuthState} = useAuthentication();
 
   return (
     <View style={styles.container}>
@@ -22,6 +24,10 @@ const Authentication = () => {
           <Text category="h2">The Ball-Box</Text>
         </Space>
       </View>
+      <OTPInput
+        toggleAuthState={toggleAuthState}
+        toggleGuestUserState={toggleGuestUserState}
+      />
       <View style={styles.tos}>
         <Text>
           By signing in, you agree to our{' '}
@@ -55,7 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
   },
   logo: {
-    top: '10%',
+    marginTop: '20%',
   },
   tos: {
     marginTop: 'auto',

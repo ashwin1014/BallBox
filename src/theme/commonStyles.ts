@@ -75,6 +75,9 @@ const styles = StyleSheet.create({
   alignSelfCenter: {
     alignSelf: 'center',
   },
+  textCenter: {
+    textAlign: 'center',
+  },
 });
 
 export default styles;

@@ -17,4 +17,14 @@ const BackIcon = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
   <Icon {...props} name="arrow-back" />
 );
 
-export {HeartIcon, BackIcon};
+const ArrowForward = (
+  props?: Partial<ImageProps>,
+): ReactElement<ImageProps> => <Icon {...props} name="arrow-forward-outline" />;
+
+const AlertTriangle = (
+  props?: Partial<ImageProps>,
+): ReactElement<ImageProps> => (
+  <Icon {...props} name="alert-triangle-outline" />
+);
+
+export {HeartIcon, BackIcon, ArrowForward, AlertTriangle};

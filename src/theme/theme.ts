@@ -8,12 +8,19 @@ const palette = {
   p3: '#79B4B7',
   p4: '#9D9D9D',
   p5: '#363636',
+  p7: '##f3f0ee',
+  p8: '#FFF',
+  p9: '#9D5353',
+  p10: '#00000030',
 };
 
 const colors = {
   background: palette.p1,
   text: palette.p5,
   link: palette.p3,
+  error: palette.p9,
+  primary: palette.p3,
+  border: palette.p10,
 };
 
 const sizes = {

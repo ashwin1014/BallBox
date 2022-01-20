@@ -3,19 +3,30 @@ import {StyleSheet} from 'react-native';
 import {Button, Layout, Text} from '@ui-kitten/components';
 
 import {HeartIcon} from 'src/assets';
+import {useAuthentication} from 'src/context';
 
-export default () => (
-  <>
-    <Layout style={styles.container}>
-      <Text style={styles.text} category="h1">
-        Welcome to BallBox
-      </Text>
-      <Button style={styles.likeButton} accessoryLeft={HeartIcon}>
-        LIKE
-      </Button>
-    </Layout>
-  </>
-);
+const Home = () => {
+  const {toggleAuthState, isAuthenticated} = useAuthentication();
+  return (
+    <>
+      <Layout style={styles.container}>
+        <Text style={styles.text} category="h1">
+          Welcome to BallBox
+        </Text>
+        <Button style={styles.likeButton} accessoryLeft={HeartIcon}>
+          LIKE
+        </Button>
+        {isAuthenticated && (
+          <Button appearance="outline" onPress={toggleAuthState}>
+            Logout
+          </Button>
+        )}
+      </Layout>
+    </>
+  );
+};
+
+export default Home;
 
 const styles = StyleSheet.create({
   container: {

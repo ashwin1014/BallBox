@@ -14,7 +14,7 @@ import {
 } from 'react-native-safe-area-context';
 
 import {AuthProvider} from 'src/context';
-import AppNavigator from 'src/navigation';
+import AppNavigator, {BottomNavigator} from 'src/navigation';
 
 const App = () => {
   return (
@@ -24,7 +24,7 @@ const App = () => {
         <ApplicationProvider {...eva} theme={eva.light}>
           <Suspense fallback={<Spinner />}>
             <AuthProvider>
-              <AppNavigator />
+              <AppNavigator />              
             </AuthProvider>
           </Suspense>
         </ApplicationProvider>

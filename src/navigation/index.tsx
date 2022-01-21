@@ -2,6 +2,8 @@ import {ComponentProps} from 'react';
 
 import {NavigationContainer, RouteProp} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 
 import {MAIN_STACK} from 'src/constants';
 import {useAuthentication} from 'src/context';
@@ -39,6 +41,22 @@ const AuthStack = () => {
   );
 };
 
+const Tab = createBottomTabNavigator();
+
+export const BottomNavigator = () => (
+  <NavigationContainer>
+    <Tab.Navigator
+      screenOptions={{
+        labelStyle: {
+          fontSize: 18,
+        },
+        activeTintColor: 'red',
+      }}>
+       <Tab.Screen name={MAIN_STACK.HOME} component={Home} /> 
+    </Tab.Navigator>
+  </NavigationContainer>
+)
+
 const AppStack = () => (
   <Stack.Navigator
     screenOptions={{
@@ -56,10 +74,12 @@ const AppNavigator = (props: NavigationProps) => {
       ref={navigationRef}
       // onReady={(): Promise<void> => RNBootSplash.hide({fade: true})}
       {...props}>
-      {isAuthenticated || isGuestUser ? <AppStack /> : <AuthStack />}
+      {isAuthenticated || isGuestUser ? <AppStack /> : <AuthStack />}       
     </NavigationContainer>
   );
 };
+
+
 
 export type {NavigationParamList, RootRouteProps};
 export default AppNavigator;

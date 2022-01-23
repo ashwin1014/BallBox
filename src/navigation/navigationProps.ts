@@ -1,13 +1,33 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 
-import {MAIN_STACK} from 'src/constants';
+import {MAIN_STACK, MAIN_TABS} from 'src/constants';
 
-import {NavigationParamList} from '.';
+import {NavigationParamList, BottomTabParamsList} from '.';
 
 type TOSScreenProp = StackNavigationProp<NavigationParamList, MAIN_STACK.TOS>;
 type PrivacyScreenProp = StackNavigationProp<
   NavigationParamList,
   MAIN_STACK.PRIVACY
 >;
+type SessionTabScreenProp = StackNavigationProp<
+  BottomTabParamsList,
+  MAIN_TABS.SESSION
+>;
 
-export type {TOSScreenProp, PrivacyScreenProp};
+type CoachTabScreenProp = StackNavigationProp<
+  BottomTabParamsList,
+  MAIN_TABS.COACH
+>;
+
+type AnalysisTabScreenProp = StackNavigationProp<
+  BottomTabParamsList,
+  MAIN_TABS.ANALYSIS
+>;
+
+export type {
+  TOSScreenProp,
+  PrivacyScreenProp,
+  SessionTabScreenProp,
+  CoachTabScreenProp,
+  AnalysisTabScreenProp,
+};

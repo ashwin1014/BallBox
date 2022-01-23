@@ -27,4 +27,39 @@ const AlertTriangle = (
   <Icon {...props} name="alert-triangle-outline" />
 );
 
-export {HeartIcon, BackIcon, ArrowForward, AlertTriangle};
+const Activity = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
+  <Icon {...props} name="activity-outline" />
+);
+
+const Home = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
+  <Icon {...props} name="home-outline" />
+);
+
+const People = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
+  <Icon {...props} name="people-outline" />
+);
+
+const Person = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
+  <Icon {...props} name="person-outline" />
+);
+
+const Recording = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
+  <Icon {...props} name="recording-outline" />
+);
+
+const MoreVertical = (
+  props?: Partial<ImageProps>,
+): ReactElement<ImageProps> => <Icon {...props} name="more-vertical" />;
+
+export {
+  HeartIcon,
+  BackIcon,
+  ArrowForward,
+  AlertTriangle,
+  Activity,
+  Home,
+  People,
+  Person,
+  Recording,
+  MoreVertical,
+};

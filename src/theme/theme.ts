@@ -12,6 +12,17 @@ const palette = {
   p8: '#FFF',
   p9: '#9D5353',
   p10: '#00000030',
+  p11: '#59b5b7',
+  p12: '#c8f4f9',
+};
+
+//https://akveo.github.io/react-native-ui-kitten/docs/design-system/eva-light-theme
+const evaThemes = {
+  'color-primary-default': palette.p3,
+  'color-primary-active': palette.p10,
+  'color-primary-disabled': palette.p12,
+  'text-basic-color': palette.p5,
+  'color-danger-default': palette.p9,
 };
 
 const colors = {
@@ -35,6 +46,6 @@ const sizes = {
   xxl: 18,
 };
 
-const theme = {colors, sizes, palette};
+const theme = {colors, sizes, palette, evaThemes};
 
 export default theme;

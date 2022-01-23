@@ -1,12 +1,8 @@
 enum MAIN_STACK {
-  HOME = 'Home',
   AUTH = 'Authentication',
-  SESSION = 'Session',
-  COACH = 'Coach',
-  PROFILE = 'Profile',
-  DATA = 'Data',
   TOS = 'TermsOfService',
   PRIVACY = 'PrivacyPolicy',
+  TABS = 'Tabs',
 }
 
 enum SESSION_TABS {
@@ -14,4 +10,11 @@ enum SESSION_TABS {
   BOWLER = 'Bowler',
 }
 
-export {MAIN_STACK, SESSION_TABS};
+enum MAIN_TABS {
+  HOME = 'Home',
+  SESSION = 'Session',
+  COACH = 'Coach',
+  ANALYSIS = 'Analysis',
+}
+
+export {MAIN_STACK, SESSION_TABS, MAIN_TABS};

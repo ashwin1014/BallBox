@@ -67,6 +67,7 @@ const OTPInput = ({toggleAuthState, toggleGuestUserState}: OTPInputProps) => {
                 placeholder="Phone number"
                 value={number}
                 onChangeText={nextValue => setNumber(nextValue)}
+                keyboardType="phone-pad"
                 style={commonStyles.flex1}
                 accessoryLeft={() => <Text>+91</Text>}
               />

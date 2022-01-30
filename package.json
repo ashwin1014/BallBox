@@ -14,7 +14,7 @@
     "pods": "cd ios && pod install",
     "xcode": "open ios/BallBox.xcworkspace",
     "husky-prepare": "husky install && chmod ug+x .husky/*",
-    "husky-setup":"npx husky add .husky/pre-commit 'yarn lint-staged'"
+    "husky-setup": "npx husky add .husky/pre-commit 'yarn lint-staged'"
   },
   "lint-staged": {
     "src/*.{ts,tsx}": [

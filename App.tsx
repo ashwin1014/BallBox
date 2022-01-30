@@ -16,6 +16,7 @@ import {
 import {AuthProvider} from 'src/context';
 import AppNavigator from 'src/navigation';
 import {theme} from 'src/theme';
+import ErrorBoundary from 'src/utils/ErrorBoundary';
 
 const App = () => {
   return (
@@ -25,11 +26,13 @@ const App = () => {
         <ApplicationProvider
           {...eva}
           theme={{...eva.light, ...theme.evaThemes}}>
-          <Suspense fallback={<Spinner />}>
-            <AuthProvider>
-              <AppNavigator />
-            </AuthProvider>
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<Spinner />}>
+              <AuthProvider>
+                <AppNavigator />
+              </AuthProvider>
+            </Suspense>
+          </ErrorBoundary>
         </ApplicationProvider>
       </SafeAreaProvider>
     </>

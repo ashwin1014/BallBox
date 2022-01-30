@@ -2,6 +2,7 @@ enum MAIN_STACK {
   AUTH = 'Authentication',
   TOS = 'TermsOfService',
   PRIVACY = 'PrivacyPolicy',
+  ADDPLAYER = 'AddPlayer',
   TABS = 'Tabs',
 }
 

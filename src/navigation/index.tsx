@@ -24,9 +24,11 @@ import {
   Analysis,
   Coach,
   Session,
+  AddPlayer,
 } from 'src/screens';
 
 import {navigationRef} from './utils';
+
 
 type NavigationProps = Partial<ComponentProps<typeof NavigationContainer>>;
 
@@ -34,6 +36,7 @@ type NavigationParamList = {
   [MAIN_STACK.AUTH]: undefined;
   [MAIN_STACK.TOS]: undefined;
   [MAIN_STACK.PRIVACY]: undefined;
+  [MAIN_STACK.ADDPLAYER]: undefined;
   [MAIN_STACK.TABS]: undefined;
 };
 
@@ -83,7 +86,7 @@ const AuthStack = () => {
       initialRouteName={MAIN_STACK.AUTH}>
       <Stack.Screen name={MAIN_STACK.AUTH} component={Authentication} />
       <Stack.Screen name={MAIN_STACK.TOS} component={TermsOfService} />
-      <Stack.Screen name={MAIN_STACK.PRIVACY} component={PrivacyPolicy} />
+      <Stack.Screen name={MAIN_STACK.PRIVACY} component={PrivacyPolicy} />      
     </Stack.Navigator>
   );
 };
@@ -95,6 +98,7 @@ const AppStack = () => (
     }}
     initialRouteName={MAIN_STACK.TABS}>
     <Stack.Screen name={MAIN_STACK.TABS} component={TabNavigator} />
+    <Stack.Screen name={MAIN_STACK.ADDPLAYER} component={AddPlayer} />
   </Stack.Navigator>
 );
 

@@ -5,6 +5,11 @@ import {MAIN_STACK, MAIN_TABS} from 'src/constants';
 import {NavigationParamList, BottomTabParamsList} from '.';
 
 type TOSScreenProp = StackNavigationProp<NavigationParamList, MAIN_STACK.TOS>;
+type AddPlayerScreenProp = StackNavigationProp<
+  NavigationParamList,
+  MAIN_STACK.ADDPLAYER
+>;
+
 type PrivacyScreenProp = StackNavigationProp<
   NavigationParamList,
   MAIN_STACK.PRIVACY
@@ -30,4 +35,5 @@ export type {
   SessionTabScreenProp,
   CoachTabScreenProp,
   AnalysisTabScreenProp,
+  AddPlayerScreenProp,
 };

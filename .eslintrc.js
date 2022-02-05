@@ -45,4 +45,15 @@ module.exports = {
       },
     },
   },
+  parserOptions: {
+    requireConfigFile: false,
+    ecmaVersion: 12,
+    sourceType: 'module',
+    allowImportExportEverywhere: false,
+    ecmaFeatures: {
+      jsx: true,
+      modules: true,
+      globalReturn: false,
+    },
+  },
 };

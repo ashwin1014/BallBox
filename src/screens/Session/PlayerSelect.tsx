@@ -11,8 +11,9 @@ import {
 
 import {View} from 'src/components';
 import {useSession} from 'src/context';
+import {Roles} from 'src/types';
 
-const PlayerSelect = () => {
+const PlayerSelect = ({type}: {type: Roles}) => {
   const {
     players,
     selectedBatsmenIndex,
@@ -25,52 +26,56 @@ const PlayerSelect = () => {
 
   return (
     <View style={styles.selectContainer}>
-      <Layout style={styles.playerSelect}>
-        <Text category="h6" style={styles.title}>
-          Select Batsmen
-        </Text>
-        <Select
-          value={selectedBatsmen?.name ?? ''}
-          selectedIndex={selectedBatsmenIndex}
-          onSelect={index => setSelectedBatsmenIndex(index as IndexPath)}>
-          {players?.map(player => (
-            <SelectItem
-              title={player.name}
-              key={player.id}
-              accessoryLeft={() => (
-                <Avatar
-                  source={{uri: player.photo}}
-                  shape="round"
-                  size="tiny"
-                />
-              )}
-            />
-          ))}
-        </Select>
-      </Layout>
-      <Layout style={styles.playerSelect}>
-        <Text category="h6" style={styles.title}>
-          Select Bowler
-        </Text>
-        <Select
-          value={selectedBowler?.name ?? ''}
-          selectedIndex={selectedBowlerIndex}
-          onSelect={index => setSelectedBowlerIndex(index as IndexPath)}>
-          {players?.map(player => (
-            <SelectItem
-              title={player.name}
-              key={player.id}
-              accessoryLeft={() => (
-                <Avatar
-                  source={{uri: player.photo}}
-                  shape="round"
-                  size="tiny"
-                />
-              )}
-            />
-          ))}
-        </Select>
-      </Layout>
+      {type === Roles.BATSMAN && (
+        <Layout style={styles.playerSelect}>
+          <Text category="h6" style={styles.title}>
+            Select Batsmen
+          </Text>
+          <Select
+            value={selectedBatsmen?.name ?? ''}
+            selectedIndex={selectedBatsmenIndex}
+            onSelect={index => setSelectedBatsmenIndex(index as IndexPath)}>
+            {players?.map(player => (
+              <SelectItem
+                title={player.name}
+                key={player.id}
+                accessoryLeft={() => (
+                  <Avatar
+                    source={{uri: player.photo}}
+                    shape="round"
+                    size="tiny"
+                  />
+                )}
+              />
+            ))}
+          </Select>
+        </Layout>
+      )}
+      {type === Roles.BOWLER && (
+        <Layout style={styles.playerSelect}>
+          <Text category="h6" style={styles.title}>
+            Select Bowler
+          </Text>
+          <Select
+            value={selectedBowler?.name ?? ''}
+            selectedIndex={selectedBowlerIndex}
+            onSelect={index => setSelectedBowlerIndex(index as IndexPath)}>
+            {players?.map(player => (
+              <SelectItem
+                title={player.name}
+                key={player.id}
+                accessoryLeft={() => (
+                  <Avatar
+                    source={{uri: player.photo}}
+                    shape="round"
+                    size="tiny"
+                  />
+                )}
+              />
+            ))}
+          </Select>
+        </Layout>
+      )}
     </View>
   );
 };

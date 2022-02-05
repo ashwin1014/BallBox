@@ -6,16 +6,18 @@ import {Text, Button} from '@ui-kitten/components';
 import ErrorBoundary from 'react-native-error-boundary';
 
 import {Bug} from 'src/assets';
-import {Center, AutoImage} from 'src/components';
+import {Center, AutoImage, Space} from 'src/components';
 import {theme} from 'src/theme';
 
 const CustomFallback = (props: {error: Error; resetError: () => void}) => {
   return (
     <Center style={styles.container}>
-      <AutoImage source={Bug} />
-      <Text category="h6">Something went wrong :(</Text>
-      <Text category="c1">{props.error.toString()}</Text>
-      <Button onPress={props.resetError}>Try Again</Button>
+      <Space direction="vertical" size="xl">
+        <AutoImage source={Bug} />
+        <Text category="h6">Something went wrong :(</Text>
+        <Text category="c1">{props.error.toString()}</Text>
+        <Button onPress={props.resetError}>Try Again</Button>
+      </Space>
     </Center>
   );
 };

@@ -22,6 +22,39 @@ interface Player {
   name?: string;
   number?: string;
   photo?: string;
+  role: Array<Roles>;
+  style?: string;
+  specialty?: string;
+  order?: string;
 }
 
-export type {UserProfile, Coach, Player};
+interface Shot {
+  shotType: string;
+  inAir: boolean;
+  runs?: number;
+}
+
+interface Out {
+  isOut: boolean;
+  outType?: string;
+  caughtAt?: string;
+}
+
+interface Ball {
+  id?: string;
+  number: number;
+  accuracy?: string;
+  length?: string;
+  shot: Shot;
+  out: Out;
+}
+
+enum Roles {
+  BOWLER = 'BOWLER',
+  WICKETKEEPER = 'WICKETKEEPER',
+  BATSMAN = 'BATSMAN',
+}
+
+export {Roles};
+
+export type {UserProfile, Coach, Player, Ball};

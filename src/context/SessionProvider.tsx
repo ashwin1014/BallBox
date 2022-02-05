@@ -12,7 +12,7 @@ import {IndexPath} from '@ui-kitten/components';
 import {Immutable} from 'immer';
 
 import {useAuthentication} from 'src/context';
-import {Player} from 'src/types';
+import {Player, Roles} from 'src/types';
 
 // import {userProfile} from './mock';
 
@@ -26,10 +26,11 @@ interface SessionContextValue {
   setSelectedBowlerIndex: Dispatch<SetStateAction<PlayerSelect>>;
   selectedBatsmenIndex: PlayerSelect;
   selectedBowlerIndex: PlayerSelect;
-  handleSessionReset: () => void;
-  handleStartTime: () => void;
-  handleEndTime: () => void;
-  sessionTime: {start: string; end: string};
+  handleSessionReset: (type: Roles) => void;
+  handleStartTime: (type: Roles) => void;
+  handleEndTime: (type: Roles) => void;
+  bowlerSessionTime: {start: string; end: string};
+  batsmanSessionTime: {start: string; end: string};
 }
 
 function createCtx<A extends {} | null>() {
@@ -53,7 +54,12 @@ const SessionDataProvider = ({children}: {children: ReactNode}) => {
   const [selectedBowlerIndex, setSelectedBowlerIndex] =
     useState<PlayerSelect>();
 
-  const [sessionTime, setSessionTime] = useState({
+  const [bowlerSessionTime, setBowlerSessionTime] = useState({
+    start: '',
+    end: '',
+  });
+
+  const [batsmanSessionTime, setBatsmanSessionTime] = useState({
     start: '',
     end: '',
   });
@@ -65,20 +71,32 @@ const SessionDataProvider = ({children}: {children: ReactNode}) => {
   const selectedBowler =
     selectedBowlerIndex && players?.[selectedBowlerIndex.row];
 
-  const handleSessionReset = () => {
-    setSelectedBatsmenIndex(undefined);
+  const handleSessionReset = (type: Roles) => {
+    if (type === Roles.BATSMAN) {
+      setSelectedBatsmenIndex(undefined);
+      setBatsmanSessionTime({start: '', end: ''});
+      return;
+    }
     setSelectedBowlerIndex(undefined);
-    setSessionTime({start: '', end: ''});
+    setBowlerSessionTime({start: '', end: ''});
   };
 
-  const handleStartTime = () => {
+  const handleStartTime = (type: Roles) => {
     const now = new Date().toISOString();
-    setSessionTime(prev => ({...prev, start: now}));
+    if (type === Roles.BATSMAN) {
+      setBatsmanSessionTime(prev => ({...prev, start: now}));
+      return;
+    }
+    setBowlerSessionTime(prev => ({...prev, start: now}));
   };
 
-  const handleEndTime = () => {
+  const handleEndTime = (type: Roles) => {
     const now = new Date().toISOString();
-    setSessionTime(prev => ({...prev, start: now}));
+    if (type === Roles.BATSMAN) {
+      setBatsmanSessionTime(prev => ({...prev, end: now}));
+      return;
+    }
+    setBowlerSessionTime(prev => ({...prev, end: now}));
   };
 
   const value = {
@@ -90,7 +108,8 @@ const SessionDataProvider = ({children}: {children: ReactNode}) => {
     selectedBatsmen,
     selectedBowler,
     handleSessionReset,
-    sessionTime,
+    batsmanSessionTime,
+    bowlerSessionTime,
     handleStartTime,
     handleEndTime,
   } as const;

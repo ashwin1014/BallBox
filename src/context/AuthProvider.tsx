@@ -61,6 +61,10 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
           name: data.name,
           number: data.number,
           photo: data.imgUrl,
+          role: data.role,
+          specialty: data.specialty,
+          style: data.style,
+          order: data.order,
         });
       });
     },

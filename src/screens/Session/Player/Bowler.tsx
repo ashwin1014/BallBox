@@ -3,17 +3,17 @@ import {useState, useRef, useMemo} from 'react';
 import {ScrollView} from 'react-native';
 
 import RnBottomSheet from '@gorhom/bottom-sheet';
-import {Text, Layout, Button, Radio, Card} from '@ui-kitten/components';
-import {format, parseISO} from 'date-fns';
+import {Text, Layout, Button, Radio} from '@ui-kitten/components';
 
-import {Space, View, BottomSheet} from 'src/components';
+import {View, BottomSheet} from 'src/components';
 import {useSession} from 'src/context';
 import {bowlerLengths, bowlerAccuracies, wicket, runs} from 'src/context/mock';
-import {commonStyles} from 'src/theme';
 import {Roles} from 'src/types';
 import {isEmpty} from 'src/utils';
 
 import PlayerSelect from '../PlayerSelect';
+import HeaderDetails from './HeaderDetails';
+import SessionActions from './SessionActions';
 import styles from './styles';
 
 const INIT_STATE_DETAIL = {
@@ -102,31 +102,11 @@ const Bowler = () => {
         </>
       ) : (
         <>
-          <View style={styles.header}>
-            <Card style={styles.card} status="info">
-              <View row>
-                <Space>
-                  <Text category="s2">Name:</Text>
-                  <Text category="p1">{playerName}</Text>
-                </Space>
-              </View>
-              <View row>
-                <Space>
-                  <Text category="s2">Start Time: </Text>
-                  <Text category="p1">
-                    {startTime &&
-                      format(parseISO(startTime), 'dd LLL yyyy, h:mm a')}
-                  </Text>
-                </Space>
-              </View>
-              <View row>
-                <Space>
-                  <Text category="s2">Ball No:</Text>
-                  <Text category="p1">{deliveryNumber}</Text>
-                </Space>
-              </View>
-            </Card>
-          </View>
+          <HeaderDetails
+            playerName={playerName}
+            startTime={startTime}
+            deliveryNumber={deliveryNumber}
+          />
           <ScrollView style={styles.inputsContainer}>
             <View row spread>
               <View>
@@ -164,21 +144,13 @@ const Bowler = () => {
               </View>
             </View>
           </ScrollView>
-          <View row spread paddingH={8} style={commonStyles.mtAuto}>
-            <Button status="danger" size="small" onPress={onCancelSession}>
-              Cancel Session
-            </Button>
-            <Button size="medium">End Session</Button>
-            <Button
-              status="info"
-              size="small"
-              onPress={handleNextBall}
-              disabled={
-                isEmpty(ballDetail.length) || isEmpty(ballDetail.accuracy)
-              }>
-              Next Ball
-            </Button>
-          </View>
+          <SessionActions
+            onCancelSession={onCancelSession}
+            handleNextBall={handleNextBall}
+            disableNextBall={
+              isEmpty(ballDetail.length) || isEmpty(ballDetail.accuracy)
+            }
+          />
           <BottomSheet
             ref={bottomSheetRef}
             snapPoints={snapPoints}

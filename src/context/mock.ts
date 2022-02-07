@@ -66,6 +66,88 @@ const userProfile: UserProfile = {
   ],
 };
 
+const batsmanLength: Array<KeyValue> = [
+  {
+    key: 'edge',
+    value: 'Edge',
+  },
+  {
+    key: 'wicket',
+    value: 'Wicket',
+  },
+  {
+    key: 'dot',
+    value: 'Dot',
+  },
+  {
+    key: 'middled',
+    value: 'Middled',
+  },
+  {
+    key: 'run',
+    value: 'Run(s)',
+  },
+];
+
+const batsmanStroke: Array<KeyValue> = [
+  {
+    key: 'defence_shot',
+    value: 'Defensive shot',
+  },
+  {
+    key: 'leave',
+    value: 'Leave',
+  },
+  {
+    key: 'drive',
+    value: 'Drive',
+  },
+  {
+    key: 'flick',
+    value: 'Flick',
+  },
+  {
+    key: 'cut',
+    value: 'Cut',
+  },
+  {
+    key: 'square_drive',
+    value: 'Square drive',
+  },
+  {
+    key: 'pull_hook',
+    value: 'Pull and hook',
+  },
+  {
+    key: 'sweep',
+    value: 'Sweep',
+  },
+  {
+    key: 'reverse_sweep',
+    value: 'Reverse sweep',
+  },
+  {
+    key: 'slog_sweep',
+    value: 'Slog & Slog Sweep',
+  },
+  {
+    key: 'upper_cut',
+    value: 'Upper cut',
+  },
+  {
+    key: 'switch_hit',
+    value: 'Switch hit',
+  },
+  {
+    key: 'scoop_ramp',
+    value: 'Scoop / ramp',
+  },
+  {
+    key: 'helicopter',
+    value: 'Helicopter',
+  },
+];
+
 const bowlerLengths: Array<KeyValue> = [
   {
     key: 'yorker',
@@ -146,6 +228,22 @@ const wicket = [
     key: 'bowled',
     value: 'Bowled',
   },
+  {
+    key: 'hit_wicket',
+    value: 'Hit Wicket',
+  },
+  {
+    key: 'lbw',
+    value: 'LBW',
+  },
 ];
 
-export {userProfile, bowlerLengths, bowlerAccuracies, runs, wicket};
+export {
+  userProfile,
+  bowlerLengths,
+  bowlerAccuracies,
+  runs,
+  wicket,
+  batsmanLength,
+  batsmanStroke,
+};

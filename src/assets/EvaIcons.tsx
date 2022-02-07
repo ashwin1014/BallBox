@@ -51,6 +51,10 @@ const MoreVertical = (
   props?: Partial<ImageProps>,
 ): ReactElement<ImageProps> => <Icon {...props} name="more-vertical" />;
 
+const CloseOutline = (
+  props?: Partial<ImageProps>,
+): ReactElement<ImageProps> => <Icon {...props} name="close-outline" />;
+
 export {
   HeartIcon,
   BackIcon,
@@ -62,4 +66,5 @@ export {
   Person,
   Recording,
   MoreVertical,
+  CloseOutline,
 };

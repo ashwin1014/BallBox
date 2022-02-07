@@ -72,6 +72,12 @@ const styles = StyleSheet.create({
   mvAuto: {
     marginVertical: 'auto',
   },
+  mlAuto: {
+    marginLeft: 'auto',
+  },
+  mtAuto: {
+    marginTop: 'auto',
+  },
   alignSelfCenter: {
     alignSelf: 'center',
   },

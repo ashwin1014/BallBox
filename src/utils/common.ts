@@ -43,4 +43,6 @@ const isEmpty = (obj: any): boolean =>
   [Object, Array].includes((obj || {}).constructor) &&
   !Object.entries(obj || {}).length;
 
-export {consoleLogger, times, uniqueObjArray, isEmpty};
+const noop: () => void = () => {};
+
+export {consoleLogger, times, uniqueObjArray, isEmpty, noop};

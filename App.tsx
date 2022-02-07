@@ -1,4 +1,5 @@
 import 'src/utils/ignoreWarnings';
+import 'react-native-gesture-handler';
 import {Suspense} from 'react';
 
 import * as eva from '@eva-design/eva';

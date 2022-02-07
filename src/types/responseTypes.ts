@@ -28,26 +28,26 @@ interface Player {
   order?: string;
 }
 
-interface Shot {
+type Shot = {
   shotType: string;
   inAir: boolean;
   runs?: number;
-}
+};
 
-interface Out {
+type Out = {
   isOut: boolean;
   outType?: string;
   caughtAt?: string;
-}
+};
 
-interface Ball {
+type Ball = {
   id?: string;
   number: number;
   accuracy?: string;
   length?: string;
   shot: Shot;
   out: Out;
-}
+};
 
 enum Roles {
   BOWLER = 'BOWLER',
@@ -55,6 +55,20 @@ enum Roles {
   BATSMAN = 'BATSMAN',
 }
 
+interface PlayerSession {
+  id?: string;
+  playerName?: string;
+  role?: string;
+  balls?: Ball[];
+  startTime?: string;
+  endTime?: string;
+}
+
+type KeyValue = {
+  key: string;
+  value: string;
+};
+
 export {Roles};
 
-export type {UserProfile, Coach, Player, Ball};
+export type {UserProfile, Coach, Player, Ball, PlayerSession, KeyValue};

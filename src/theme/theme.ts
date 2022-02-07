@@ -14,6 +14,11 @@ const palette = {
   p10: '#00000030',
   p11: '#59b5b7',
   p12: '#c8f4f9',
+  p13: '#B43B42',
+  p14: '#F09CA2',
+  p15: '#6AABD2',
+  p16: '#2E8BC0',
+  p17: '#B7CFDC',
 };
 
 //https://akveo.github.io/react-native-ui-kitten/docs/design-system/eva-light-theme
@@ -23,6 +28,11 @@ const evaThemes = {
   'color-primary-disabled': palette.p12,
   'text-basic-color': palette.p5,
   'color-danger-default': palette.p9,
+  'color-danger-active': palette.p13,
+  'color-danger-disabled': palette.p14,
+  'color-info-default': palette.p15,
+  'color-info-active': palette.p16,
+  'color-info-disabled': palette.p17,
 };
 
 const colors = {
@@ -32,6 +42,7 @@ const colors = {
   error: palette.p9,
   primary: palette.p3,
   border: palette.p10,
+  info: palette.p15,
 };
 
 const sizes = {

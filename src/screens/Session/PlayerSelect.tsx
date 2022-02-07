@@ -85,7 +85,7 @@ export default PlayerSelect;
 const styles = StyleSheet.create({
   selectContainer: {
     marginTop: 30,
-    padding: 20,
+    padding: 10,
   },
   playerSelect: {
     marginBottom: 50,

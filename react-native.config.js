@@ -1,8 +1,7 @@
 module.exports = {
-    project: {
-      ios: {},
-      android: {}, // grouped into "project"
-    },
-    assets: [],
-  };
-  
+  project: {
+    ios: {},
+    android: {}, // grouped into "project"
+  },
+  assets: [],
+};

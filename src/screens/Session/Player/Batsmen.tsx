@@ -7,7 +7,7 @@ import {Text, Layout, Button, Radio} from '@ui-kitten/components';
 
 import {View, BottomSheet} from 'src/components';
 import {useSession} from 'src/context';
-import {batsmanLength, batsmanStroke, wicket, runs} from 'src/context/mock';
+import {batsmanAccuracy, batsmanStroke, wicket, runs} from 'src/context/mock';
 import {Roles} from 'src/types';
 import {isEmpty} from 'src/utils';
 
@@ -17,7 +17,7 @@ import SessionActions from './SessionActions';
 import styles from './styles';
 
 const INIT_STATE_DETAIL = {
-  length: '',
+  accuracy: '',
   stroke: '',
 };
 
@@ -70,9 +70,9 @@ const Batsman = () => {
   const handleAccuracyDetail = (type: string, value: string | number) => {
     setAccuracyDetail(prev => ({...prev, [type]: value}));
     if (type === 'runs') {
-      setBallDetail(prev => ({...prev, length: 'run'}));
+      setBallDetail(prev => ({...prev, accuracy: 'run'}));
     } else {
-      setBallDetail(prev => ({...prev, length: 'wicket'}));
+      setBallDetail(prev => ({...prev, accuracy: 'wicket'}));
     }
     handleSheetClose();
   };
@@ -130,13 +130,13 @@ const Batsman = () => {
                 <Text category="h5" style={styles.label}>
                   Length
                 </Text>
-                {batsmanLength.map(({key, value}) => (
+                {batsmanAccuracy.map(({key, value}) => (
                   <View style={styles.controlContainer} key={key}>
                     <Radio
                       style={styles.radio}
                       status="control"
-                      checked={ballDetail.length === key}
-                      onChange={() => handleDetail('length')(key)}>
+                      checked={ballDetail.accuracy === key}
+                      onChange={() => handleDetail('accuracy')(key)}>
                       {value}
                     </Radio>
                   </View>
@@ -148,8 +148,9 @@ const Batsman = () => {
             onCancelSession={onCancelSession}
             handleNextBall={handleNextBall}
             disableNextBall={
-              isEmpty(ballDetail.length) || isEmpty(ballDetail.stroke)
+              isEmpty(ballDetail.accuracy) || isEmpty(ballDetail.stroke)
             }
+            handleSessionEnd={() => {}}
           />
           <BottomSheet
             ref={bottomSheetRef}

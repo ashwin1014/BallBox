@@ -1,14 +1,16 @@
-import {useState, useRef, useMemo} from 'react';
+import {useState, useRef, useMemo, useEffect, useCallback} from 'react';
 
 import {ScrollView} from 'react-native';
 
 import RnBottomSheet from '@gorhom/bottom-sheet';
 import {Text, Layout, Button, Radio} from '@ui-kitten/components';
+import {useImmer} from 'use-immer';
+import {v4 as uuidv4} from 'uuid';
 
 import {View, BottomSheet} from 'src/components';
 import {useSession} from 'src/context';
 import {bowlerLengths, bowlerAccuracies, wicket, runs} from 'src/context/mock';
-import {Roles} from 'src/types';
+import {Roles, Ball, BowlerSession} from 'src/types';
 import {isEmpty} from 'src/utils';
 
 import PlayerSelect from '../PlayerSelect';
@@ -23,7 +25,7 @@ const INIT_STATE_DETAIL = {
 
 const INIT_STATE_ACC = {
   runs: 0,
-  wicket: '',
+  wicketType: '',
 };
 
 const Bowler = () => {
@@ -33,36 +35,82 @@ const Bowler = () => {
     handleSessionReset,
     handleStartTime,
   } = useSession();
-  const [deliveryNumber, setDeliveryNumber] = useState(1);
   const [sessionStart, setStartSession] = useState(false);
+  const [endActiveSession, setEndActiveSession] = useState(false);
+  const [modalType, setModalType] = useState<'wicket' | 'run'>();
   const [ballDetail, setBallDetail] =
     useState<typeof INIT_STATE_DETAIL>(INIT_STATE_DETAIL);
-  const [modalType, setModalType] = useState<'wicket' | 'run'>();
-  const [accuracyDetail, setAccuracyDetail] = useState(INIT_STATE_ACC);
+  const [accuracyDetail, setAccuracyDetail] =
+    useState<typeof INIT_STATE_ACC>(INIT_STATE_ACC);
+  const [deliveryNumber, setDeliveryNumber] = useState(1);
+  const [balls, setBalls] = useImmer<Ball[]>([]);
+
   const bottomSheetRef = useRef<RnBottomSheet>(null);
+
+  const playerName = selectedBowler?.name ?? '';
+  const startTime = bowlerSessionTime.start ?? '';
 
   const snapPoints = useMemo(
     () => ['2%', modalType === 'wicket' ? '35%' : '45%'],
     [modalType],
   );
-  // console.log(ballDetail);
+  // console.log({balls: isEmpty(balls)});
 
   const handleSheetClose = (): void => bottomSheetRef?.current?.close();
   const handleSheetOpen = (): void => bottomSheetRef?.current?.expand();
 
   const handleDeliveryCounter = () => setDeliveryNumber(prev => prev + 1);
+  const handleStateReset = useCallback(
+    (isEnd = false) => {
+      setBallDetail(INIT_STATE_DETAIL);
+      setAccuracyDetail(INIT_STATE_ACC);
+      if (isEnd) {
+        setBalls([]);
+        setEndActiveSession(false);
+      }
+    },
+    [setBalls],
+  );
 
   const handleNextBall = () => {
+    const currentBallPayload = {
+      playerId: selectedBowler?.id,
+      playerName: selectedBowler?.name,
+      deliveryNumber,
+      ...ballDetail,
+      ...accuracyDetail,
+    };
+    setBalls(draft => {
+      draft.push(currentBallPayload);
+    });
+    // console.log(currentBallPayload);
     handleDeliveryCounter();
-    setBallDetail(INIT_STATE_DETAIL);
-    setAccuracyDetail(INIT_STATE_ACC);
+    handleStateReset();
   };
+
+  const handleSessionEnd = () => {
+    handleNextBall();
+    setEndActiveSession(true);
+  };
+
+  const saveSessionDetails = useCallback(() => {
+    const endTime = new Date().toISOString();
+    const sessionPayload: BowlerSession = {
+      userId: 'u1',
+      sessionId: uuidv4(),
+      startTime,
+      endTime,
+      type: 'bowler',
+      balls,
+    };
+    console.log(sessionPayload);
+    handleStateReset(true);
+  }, [balls, handleStateReset, startTime]);
 
   const handleDetail = (type: string) => (value: string) => {
     if (value === 'run' || value === 'wicket') {
       setModalType(value);
       handleSheetOpen();
-      return;
     }
     setBallDetail(prev => ({...prev, [type]: value}));
   };
@@ -80,7 +128,7 @@ const Bowler = () => {
   const onCancelSession = () => {
     setStartSession(false);
     handleSessionReset(Roles.BOWLER);
-    setBallDetail(INIT_STATE_DETAIL);
+    handleStateReset(true);
   };
 
   const onStartSession = () => {
@@ -88,8 +136,11 @@ const Bowler = () => {
     setStartSession(true);
   };
 
-  const playerName = selectedBowler?.name ?? '';
-  const startTime = bowlerSessionTime.start ?? '';
+  useEffect(() => {
+    if (endActiveSession) {
+      saveSessionDetails();
+    }
+  }, [endActiveSession, saveSessionDetails]);
 
   return (
     <Layout style={styles.tabContainer}>
@@ -150,6 +201,8 @@ const Bowler = () => {
             disableNextBall={
               isEmpty(ballDetail.length) || isEmpty(ballDetail.accuracy)
             }
+            disableEndSession={isEmpty(balls)}
+            handleSessionEnd={handleSessionEnd}
           />
           <BottomSheet
             ref={bottomSheetRef}
@@ -183,7 +236,7 @@ const Bowler = () => {
                       <Radio
                         style={styles.radio}
                         status="primary"
-                        checked={accuracyDetail.wicket === key}
+                        checked={accuracyDetail.wicketType === key}
                         onChange={() => handleAccuracyDetail('wicket', key)}>
                         {value}
                       </Radio>

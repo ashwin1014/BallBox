@@ -1,7 +1,9 @@
+// import {addBusinessDays} from 'date-fns';
+
 import {UserProfile, Roles, KeyValue} from 'src/types';
 
 const userProfile: UserProfile = {
-  id: 'u1',
+  userId: 'u1',
   name: 'John Doe',
   email: 'hello@world.com',
   phone: '+919876789876',
@@ -66,7 +68,7 @@ const userProfile: UserProfile = {
   ],
 };
 
-const batsmanLength: Array<KeyValue> = [
+const batsmanAccuracy: Array<KeyValue> = [
   {
     key: 'edge',
     value: 'Edge',
@@ -238,12 +240,43 @@ const wicket = [
   },
 ];
 
+const bowlerSession = {
+  userId: 'u1',
+  sessionId: 'ps1',
+  startTime: new Date(),
+  endTime: new Date(),
+  type: 'bowler',
+  balls: [
+    {
+      playerName: 'Player 1',
+      playerId: 'p1',
+      role: ['BOWLER'],
+      deliveryNumber: 1,
+      accuracy: 'wicket',
+      length: 'full_length',
+      runs: null,
+      wicketType: 'caught',
+    },
+    {
+      playerName: 'Player 2',
+      playerId: 'p1',
+      deliveryNumber: 2,
+      role: ['BOWLER'],
+      accuracy: 'run',
+      length: 'full_length',
+      runs: 4,
+      wicketType: null,
+    },
+  ],
+};
+
 export {
   userProfile,
   bowlerLengths,
   bowlerAccuracies,
   runs,
   wicket,
-  batsmanLength,
+  batsmanAccuracy,
   batsmanStroke,
+  bowlerSession,
 };

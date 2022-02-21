@@ -1,5 +1,5 @@
 interface UserProfile {
-  id?: string;
+  userId?: string;
   name?: string;
   email?: string;
   phone?: string;
@@ -28,40 +28,41 @@ interface Player {
   order?: string;
 }
 
-type Shot = {
-  shotType: string;
-  inAir: boolean;
-  runs?: number;
-};
+interface BowlerSession {
+  userId: string;
+  sessionId: string;
+  startTime: string;
+  endTime: string;
+  type: 'bowler';
+  balls: Array<Ball>;
+}
 
-type Out = {
-  isOut: boolean;
-  outType?: string;
-  caughtAt?: string;
-};
+// type Shot = {
+//   shotType: string;
+//   inAir: boolean;
+//   runs?: number;
+// };
+
+// type Out = {
+//   isOut: boolean;
+//   outType?: string;
+//   caughtAt?: string;
+// };
 
 type Ball = {
-  id?: string;
-  number: number;
+  playerId?: string;
+  playerName?: string;
+  deliveryNumber: number;
   accuracy?: string;
   length?: string;
-  shot: Shot;
-  out: Out;
+  runs?: number;
+  wicketType?: string;
 };
 
 enum Roles {
   BOWLER = 'BOWLER',
   WICKETKEEPER = 'WICKETKEEPER',
   BATSMAN = 'BATSMAN',
-}
-
-interface PlayerSession {
-  id?: string;
-  playerName?: string;
-  role?: string;
-  balls?: Ball[];
-  startTime?: string;
-  endTime?: string;
 }
 
 type KeyValue = {
@@ -71,4 +72,4 @@ type KeyValue = {
 
 export {Roles};
 
-export type {UserProfile, Coach, Player, Ball, PlayerSession, KeyValue};
+export type {UserProfile, Coach, Player, Ball, KeyValue, BowlerSession};

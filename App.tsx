@@ -1,5 +1,6 @@
 import 'src/utils/ignoreWarnings';
 import 'react-native-gesture-handler';
+import 'react-native-get-random-values';
 import {Suspense} from 'react';
 
 import * as eva from '@eva-design/eva';

@@ -3,6 +3,7 @@ import {useContext, createContext, ReactNode, useCallback} from 'react';
 import {Immutable} from 'immer';
 import {useImmer} from 'use-immer';
 
+import {auth} from 'src/firebase';
 import {useToggle} from 'src/hooks';
 import {UserProfile, Coach, Player} from 'src/types';
 
@@ -12,6 +13,7 @@ interface AuthContextValue {
   isAuthenticated: boolean;
   toggleAuthState: () => void;
   isGuestUser: boolean;
+  loading: boolean;
   toggleGuestUserState: () => void;
   profile: Immutable<UserProfile>;
   addCoach: (data: Coach) => void;
@@ -36,7 +38,23 @@ const [useAuthentication, AuthenticationProvider] =
 const AuthProvider = ({children}: {children: ReactNode}) => {
   const [isAuthenticated, toggleAuthState] = useToggle(false);
   const [isGuestUser, toggleGuestUserState] = useToggle(false);
+  const [loading, toggleLoading] = useToggle(false);
   const [profile, setProfile] = useImmer<Immutable<UserProfile>>(userProfile);
+
+  const handleAnonymousLogin = useCallback(async () => {
+    toggleLoading();
+    try {
+      await auth().signInAnonymously();
+      toggleGuestUserState();
+    } catch (error) {
+      if ((error as any).code === 'auth/operation-not-allowed') {
+        console.log('Enable anonymous in your firebase console.');
+      }
+      console.error(error);
+    } finally {
+      toggleLoading();
+    }
+  }, [toggleGuestUserState, toggleLoading]);
 
   const addCoach = useCallback(
     data => {
@@ -75,10 +93,11 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     isAuthenticated,
     toggleAuthState,
     isGuestUser,
-    toggleGuestUserState,
+    toggleGuestUserState: handleAnonymousLogin,
     profile,
     addCoach,
     addPlayer,
+    loading,
   } as const;
 
   return (

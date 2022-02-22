@@ -7,6 +7,7 @@ interface UserProfile {
   photo?: string;
   coaches?: Coach[];
   players?: Player[];
+  userType?: 'guest' | 'admin' | 'regular';
 }
 
 interface Coach {

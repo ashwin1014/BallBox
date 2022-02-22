@@ -1,9 +1,16 @@
-import {useContext, createContext, ReactNode, useCallback} from 'react';
+import {
+  useContext,
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 
 import {Immutable} from 'immer';
 import {useImmer} from 'use-immer';
 
-import {auth} from 'src/firebase';
+import {auth, FirebaseAuthTypes} from 'src/firebase';
 import {useToggle} from 'src/hooks';
 import {UserProfile, Coach, Player} from 'src/types';
 
@@ -15,9 +22,13 @@ interface AuthContextValue {
   isGuestUser: boolean;
   loading: boolean;
   toggleGuestUserState: () => void;
-  profile: Immutable<UserProfile>;
+  handleSignOut: () => Promise<void>;
+  phoneLogin: (phoneNumber: string) => Promise<void>;
+  confirmOtpLogin: (otp: string) => Promise<void>;
+  profile: Immutable<UserProfile | null>;
   addCoach: (data: Coach) => void;
   addPlayer: (data: Player) => void;
+  confirmSms: FirebaseAuthTypes.ConfirmationResult | null;
 }
 
 function createCtx<A extends {} | null>() {
@@ -39,12 +50,46 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
   const [isAuthenticated, toggleAuthState] = useToggle(false);
   const [isGuestUser, toggleGuestUserState] = useToggle(false);
   const [loading, toggleLoading] = useToggle(false);
-  const [profile, setProfile] = useImmer<Immutable<UserProfile>>(userProfile);
+  const [confirmSms, setConfirmSms] =
+    useState<FirebaseAuthTypes.ConfirmationResult | null>(null);
+  const [profile, setProfile] =
+    useImmer<Immutable<UserProfile | null>>(userProfile);
+
+  const phoneLogin = useCallback(
+    async (phoneNumber: string) => {
+      toggleLoading();
+      try {
+        const confirmation = await auth.signInWithPhoneNumber(
+          `+91${phoneNumber}`,
+        );
+        setConfirmSms(confirmation);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        toggleLoading();
+      }
+    },
+    [toggleLoading],
+  );
+
+  const confirmOtpLogin = useCallback(
+    async (otp: string) => {
+      toggleLoading();
+      try {
+        await confirmSms?.confirm(otp);
+      } catch {
+        console.log('Invalid code.');
+      } finally {
+        toggleLoading();
+      }
+    },
+    [confirmSms, toggleLoading],
+  );
 
   const handleAnonymousLogin = useCallback(async () => {
     toggleLoading();
     try {
-      await auth().signInAnonymously();
+      await auth.signInAnonymously();
       toggleGuestUserState();
     } catch (error) {
       if ((error as any).code === 'auth/operation-not-allowed') {
@@ -55,6 +100,20 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
       toggleLoading();
     }
   }, [toggleGuestUserState, toggleLoading]);
+
+  const handleSignOut = useCallback(async () => {
+    toggleLoading();
+    try {
+      await auth.signOut();
+      toggleAuthState();
+      toggleGuestUserState();
+      setProfile(null);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      toggleLoading();
+    }
+  }, [setProfile, toggleAuthState, toggleGuestUserState, toggleLoading]);
 
   const addCoach = useCallback(
     data => {
@@ -89,6 +148,25 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     [setProfile],
   );
 
+  const handleOnAuthStateChanged = useCallback(
+    (user: FirebaseAuthTypes.User | null) => {
+      console.log({user: user});
+      if (user?.isAnonymous) {
+        // toggleGuestUserState();
+        console.log('Guest user');
+      }
+    },
+    [],
+  );
+
+  useEffect(() => {
+    const subscriber = auth.onAuthStateChanged(userState => {
+      handleOnAuthStateChanged(userState);
+    });
+
+    return subscriber;
+  }, [handleOnAuthStateChanged]);
+
   const value = {
     isAuthenticated,
     toggleAuthState,
@@ -98,6 +176,10 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     addCoach,
     addPlayer,
     loading,
+    handleSignOut,
+    phoneLogin,
+    confirmOtpLogin,
+    confirmSms,
   } as const;
 
   return (

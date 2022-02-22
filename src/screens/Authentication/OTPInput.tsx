@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-import {StyleSheet, SafeAreaView, Text as RnText} from 'react-native';
+import {StyleSheet, SafeAreaView, Text as RnText, Keyboard} from 'react-native';
 
 import {Text, Input, Button as IconBtn} from '@ui-kitten/components';
 import {
@@ -12,16 +12,17 @@ import {
 
 import {ArrowForward} from 'src/assets';
 import {View, Space, ErrorText, Button} from 'src/components';
+import {useAuthentication} from 'src/context';
 import {useToggle} from 'src/hooks';
 import {commonStyles, theme} from 'src/theme';
 import {isPhoneNumberValid, isEmpty} from 'src/utils';
 
-type OTPInputProps = {
-  toggleAuthState: () => void;
-  toggleGuestUserState: () => void;
-};
+// type OTPInputProps = {
+//   toggleAuthState: () => void;
+//   toggleGuestUserState: () => void;
+// };
 
-const OTPInput = ({toggleAuthState, toggleGuestUserState}: OTPInputProps) => {
+const OTPInput = () => {
   const [error, setError] = useState({number: '', otp: ''});
   const [number, setNumber] = useState('');
   const [otp, setOtp] = useState('');
@@ -31,6 +32,13 @@ const OTPInput = ({toggleAuthState, toggleGuestUserState}: OTPInputProps) => {
     value: otp,
     setValue: setOtp,
   });
+  const {
+    toggleAuthState,
+    toggleGuestUserState,
+    // phoneLogin,
+    // confirmOtpLogin,
+    // confirmSms,
+  } = useAuthentication();
 
   const handleNumberSubmit = () => {
     if (isEmpty(number)) {
@@ -44,7 +52,9 @@ const OTPInput = ({toggleAuthState, toggleGuestUserState}: OTPInputProps) => {
       setError(prevState => ({...prevState, number: 'Invalid phone number'}));
       return;
     }
+    Keyboard.dismiss();
     setError(prevState => ({...prevState, number: ''}));
+    // phoneLogin(number);
     handleOtpInput();
   };
 

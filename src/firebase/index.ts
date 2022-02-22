@@ -1,3 +1,8 @@
-import auth from '@react-native-firebase/auth';
+import firebaseAuth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
-export {auth};
+const auth = firebaseAuth();
+const db = firestore();
+
+export {auth, db};
+export type {FirebaseAuthTypes};

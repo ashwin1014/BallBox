@@ -8,3 +8,4 @@ export {default as AutoImage} from './uiKit/AutoImage';
 export {default as BottomSheet} from './uiKit/BottomSheet';
 //uiComponents
 export {default as AppLayout} from './uiComponents/Layout';
+export {default as OverlaySpinner} from './uiComponents/OverlaySpinner';

@@ -1,10 +1,10 @@
-import {StyleSheet, Pressable} from 'react-native';
+import {StyleSheet, Pressable, KeyboardAvoidingView} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
-import {Text, Modal, Spinner} from '@ui-kitten/components';
+import {Text} from '@ui-kitten/components';
 
 import {Logo} from 'src/assets';
-import {View, Space} from 'src/components';
+import {View, Space, OverlaySpinner} from 'src/components';
 import {MAIN_STACK} from 'src/constants';
 import {useAuthentication} from 'src/context';
 import {TOSScreenProp, PrivacyScreenProp} from 'src/navigation/navigationProps';
@@ -14,10 +14,10 @@ import OTPInput from './OTPInput';
 
 const Authentication = () => {
   const {navigate} = useNavigation<TOSScreenProp & PrivacyScreenProp>();
-  const {toggleGuestUserState, toggleAuthState, loading} = useAuthentication();
+  const {toggleGuestUserState, loading} = useAuthentication();
 
   return (
-    <>
+    <KeyboardAvoidingView>
       <View style={styles.container}>
         <View jcCenter style={styles.logo}>
           <Space direction="vertical">
@@ -25,10 +25,7 @@ const Authentication = () => {
             <Text category="h2">The Ball-Box</Text>
           </Space>
         </View>
-        <OTPInput
-          toggleAuthState={toggleAuthState}
-          toggleGuestUserState={toggleGuestUserState}
-        />
+        <OTPInput />
         <View style={styles.tos}>
           <Text>
             By signing in, you agree to our{' '}
@@ -51,12 +48,8 @@ const Authentication = () => {
           </Pressable>
         </View>
       </View>
-      {loading && (
-        <Modal visible={loading} backdropStyle={styles.backdrop}>
-          <Spinner />
-        </Modal>
-      )}
-    </>
+      <OverlaySpinner loading={loading} />
+    </KeyboardAvoidingView>
   );
 };
 
@@ -87,8 +80,5 @@ const styles = StyleSheet.create({
   link: {
     color: theme.colors.link,
     textDecorationLine: 'underline',
-  },
-  backdrop: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 });

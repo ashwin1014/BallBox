@@ -7,6 +7,7 @@ import {
 import {NavigationContainer, RouteProp} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {BottomNavigation, BottomNavigationTab} from '@ui-kitten/components';
+import Toast from 'react-native-toast-message';
 
 import {
   Home as HomeIcon,
@@ -101,12 +102,15 @@ const AppStack = () => (
 const AppNavigator = (props: NavigationProps) => {
   const {isAuthenticated, isGuestUser} = useAuthentication();
   return (
-    <NavigationContainer
-      ref={navigationRef}
-      // onReady={(): Promise<void> => RNBootSplash.hide({fade: true})}
-      {...props}>
-      {isAuthenticated || isGuestUser ? <AppStack /> : <AuthStack />}
-    </NavigationContainer>
+    <>
+      <NavigationContainer
+        ref={navigationRef}
+        // onReady={(): Promise<void> => RNBootSplash.hide({fade: true})}
+        {...props}>
+        {isAuthenticated || isGuestUser ? <AppStack /> : <AuthStack />}
+      </NavigationContainer>
+      <Toast />
+    </>
   );
 };
 

@@ -32,13 +32,8 @@ const OTPInput = () => {
     value: otp,
     setValue: setOtp,
   });
-  const {
-    // toggleAuthState,
-    // toggleGuestUserState,
-    phoneLogin,
-    confirmOtpLogin,
-    confirmSms,
-  } = useAuthentication();
+  const {phoneLogin, confirmOtpLogin, confirmSms} = useAuthentication();
+  console.log({confirmSms});
 
   const handleNumberSubmit = async () => {
     if (isEmpty(number)) {
@@ -55,7 +50,7 @@ const OTPInput = () => {
     Keyboard.dismiss();
     setError(prevState => ({...prevState, number: ''}));
     await phoneLogin(number);
-    if (confirmSms) {
+    if (!isEmpty(confirmSms)) {
       handleOtpInput();
     }
   };
@@ -110,6 +105,7 @@ const OTPInput = () => {
               value={otp}
               onChangeText={setOtp}
               cellCount={6}
+              caretHidden={false}
               rootStyle={styles.codeFieldRoot}
               keyboardType="number-pad"
               textContentType="oneTimeCode"

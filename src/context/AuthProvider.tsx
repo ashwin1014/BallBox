@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 import {Immutable} from 'immer';
+import Toast from 'react-native-toast-message';
 import {useImmer} from 'use-immer';
 
 import {auth, FirebaseAuthTypes, db} from 'src/firebase';
@@ -62,9 +63,19 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
         const confirmation = await auth.signInWithPhoneNumber(
           `+91${phoneNumber}`,
         );
+        Toast.show({
+          type: 'success',
+          text2: `OTP sent successfully to +91${phoneNumber}`,
+        });
         setConfirmSms(confirmation);
       } catch (e) {
-        console.error(e);
+        if (e instanceof Error) {
+          console.error('phoneLogin', e.message);
+          Toast.show({
+            type: 'error',
+            text2: e.message,
+          });
+        }
       } finally {
         toggleLoading();
       }
@@ -99,19 +110,26 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
       toggleLoading();
       try {
         const userDetails = await confirmSms?.confirm(otp);
-        console.log({userDetails});
         const isNewUser = userDetails?.additionalUserInfo?.isNewUser;
         const uid = userDetails?.user.uid;
+        console.log({userDetails});
+        console.log({isNewUser});
         if (isNewUser) {
           await handleAddNewUser(uid);
         }
         toggleAuthState();
         toggleGuestUserState();
       } catch (e) {
-        console.error('Invalid OTP');
-        console.log(JSON.stringify(e));
+        if (e instanceof Error) {
+          console.error('confirmOtpLogin', e.message);
+          Toast.show({
+            type: 'error',
+            text2: e.message,
+          });
+        }
       } finally {
         toggleLoading();
+        setConfirmSms(null);
       }
     },
     [confirmSms, toggleAuthState, toggleGuestUserState, toggleLoading],
@@ -123,10 +141,13 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
       await auth.signInAnonymously();
       toggleGuestUserState();
     } catch (error) {
-      if ((error as any).code === 'auth/operation-not-allowed') {
-        console.log('Enable anonymous in your firebase console.');
+      if (error instanceof Error) {
+        console.error('handleAnonymousLogin', error.message);
+        Toast.show({
+          type: 'error',
+          text2: error.message,
+        });
       }
-      console.error(error);
     } finally {
       toggleLoading();
     }

@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "npx react-native run-android",
+    "android": "FIREBASE_APP_CHECK_DEBUG_TOKEN='42BFF18C-493F-4640-928A-B80E6A2BD5C8' npx react-native run-android",
     "ios": "npx react-native run-ios",
-    "start": "FIREBASE_APP_CHECK_DEBUG_TOKEN='42BFF18C-493F-4640-928A-B80E6A2BD5C8' react-native start --reset-cache",
+    "start": "react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "clean-gradle": "cd android && ./gradlew clean",
@@ -58,6 +58,7 @@
     "react-native-safe-area-context": "^3.4.1",
     "react-native-screens": "^3.10.2",
     "react-native-svg": "^12.1.1",
+    "react-native-toast-message": "^2.1.1",
     "use-immer": "^0.6.0",
     "uuid": "^8.3.2"
   },

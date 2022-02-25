@@ -2,6 +2,17 @@
 
 import {UserProfile, Roles, KeyValue} from 'src/types';
 
+// const USER_PROFILE_INITIAL_STATE: UserProfile = {
+//   userId: '',
+//   name: '',
+//   email: '',
+//   phone: '',
+//   academy: '',
+//   photo: '',
+//   coaches: [],
+//   players: [],
+// };
+
 const userProfile: UserProfile = {
   userId: 'u1',
   name: 'John Doe',

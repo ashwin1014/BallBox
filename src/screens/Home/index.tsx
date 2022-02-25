@@ -19,7 +19,7 @@ type TabRouteProps = AnalysisTabScreenProp &
 
 const Home = () => {
   const {navigate} = useNavigation<TabRouteProps>();
-  const {toggleAuthState, isAuthenticated} = useAuthentication();
+  const {isAuthenticated, handleSignOut} = useAuthentication();
   return (
     <>
       <AppLayout>
@@ -43,7 +43,7 @@ const Home = () => {
             Analyse Player
           </Button>
           {isAuthenticated && (
-            <Button appearance="outline" onPress={toggleAuthState}>
+            <Button appearance="outline" onPress={handleSignOut}>
               Logout
             </Button>
           )}

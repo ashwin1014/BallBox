@@ -55,6 +55,10 @@ const CloseOutline = (
   props?: Partial<ImageProps>,
 ): ReactElement<ImageProps> => <Icon {...props} name="close-outline" />;
 
+const Edit = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
+  <Icon {...props} name="edit-2-outline" />
+);
+
 export {
   HeartIcon,
   BackIcon,
@@ -67,4 +71,5 @@ export {
   Recording,
   MoreVertical,
   CloseOutline,
+  Edit,
 };

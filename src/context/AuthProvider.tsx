@@ -10,7 +10,7 @@ import {
 import {Immutable} from 'immer';
 import {useImmer} from 'use-immer';
 
-import {auth, FirebaseAuthTypes} from 'src/firebase';
+import {auth, FirebaseAuthTypes, db} from 'src/firebase';
 import {useToggle} from 'src/hooks';
 import {UserProfile, Coach, Player} from 'src/types';
 
@@ -72,18 +72,49 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     [toggleLoading],
   );
 
+  const handleAddNewUser = async (uid: string | undefined) => {
+    if (!uid) {
+      return;
+    }
+
+    const userObj = {
+      userId: uid,
+      name: '',
+      email: '',
+      phone: '',
+      academy: '',
+      photo: '',
+      coaches: [],
+      players: [],
+    };
+
+    try {
+      await db.collection('users').doc(uid).set(userObj);
+      // await db.collection('users').doc('preferences').set(userObj);
+    } catch {}
+  };
+
   const confirmOtpLogin = useCallback(
     async (otp: string) => {
       toggleLoading();
       try {
-        await confirmSms?.confirm(otp);
-      } catch {
-        console.log('Invalid code.');
+        const userDetails = await confirmSms?.confirm(otp);
+        console.log({userDetails});
+        const isNewUser = userDetails?.additionalUserInfo?.isNewUser;
+        const uid = userDetails?.user.uid;
+        if (isNewUser) {
+          await handleAddNewUser(uid);
+        }
+        toggleAuthState();
+        toggleGuestUserState();
+      } catch (e) {
+        console.error('Invalid OTP');
+        console.log(JSON.stringify(e));
       } finally {
         toggleLoading();
       }
     },
-    [confirmSms, toggleLoading],
+    [confirmSms, toggleAuthState, toggleGuestUserState, toggleLoading],
   );
 
   const handleAnonymousLogin = useCallback(async () => {

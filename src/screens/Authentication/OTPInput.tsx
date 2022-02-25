@@ -10,7 +10,7 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 
-import {ArrowForward} from 'src/assets';
+import {ArrowForward, Edit} from 'src/assets';
 import {View, Space, ErrorText, Button} from 'src/components';
 import {useAuthentication} from 'src/context';
 import {useToggle} from 'src/hooks';
@@ -33,14 +33,14 @@ const OTPInput = () => {
     setValue: setOtp,
   });
   const {
-    toggleAuthState,
-    toggleGuestUserState,
-    // phoneLogin,
-    // confirmOtpLogin,
-    // confirmSms,
+    // toggleAuthState,
+    // toggleGuestUserState,
+    phoneLogin,
+    confirmOtpLogin,
+    confirmSms,
   } = useAuthentication();
 
-  const handleNumberSubmit = () => {
+  const handleNumberSubmit = async () => {
     if (isEmpty(number)) {
       setError(prevState => ({
         ...prevState,
@@ -54,8 +54,10 @@ const OTPInput = () => {
     }
     Keyboard.dismiss();
     setError(prevState => ({...prevState, number: ''}));
-    // phoneLogin(number);
-    handleOtpInput();
+    await phoneLogin(number);
+    if (confirmSms) {
+      handleOtpInput();
+    }
   };
 
   const handleLogin = () => {
@@ -63,8 +65,9 @@ const OTPInput = () => {
       setError(prevState => ({...prevState, otp: 'Please enter OTP'}));
       return;
     }
-    toggleAuthState();
-    toggleGuestUserState();
+    confirmOtpLogin(otp);
+    // toggleAuthState();
+    // toggleGuestUserState();
   };
 
   return (
@@ -93,13 +96,20 @@ const OTPInput = () => {
       ) : (
         <>
           <SafeAreaView style={styles.root}>
-            <Text>Enter OTP sent to +91{number}</Text>
+            <Space size="xxs">
+              <Text>Enter OTP sent to +91{number}</Text>
+              <IconBtn
+                onPress={handleOtpInput}
+                appearance="ghost"
+                accessoryLeft={<Edit />}
+              />
+            </Space>
             <CodeField
               ref={ref}
               {...props}
               value={otp}
               onChangeText={setOtp}
-              cellCount={4}
+              cellCount={6}
               rootStyle={styles.codeFieldRoot}
               keyboardType="number-pad"
               textContentType="oneTimeCode"
@@ -145,6 +155,10 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+  },
+  edit: {
+    backgroundColor: 'transparent',
     borderColor: theme.colors.primary,
   },
   root: {padding: 30},

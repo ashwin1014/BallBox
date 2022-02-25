@@ -5,7 +5,7 @@
   "scripts": {
     "android": "npx react-native run-android",
     "ios": "npx react-native run-ios",
-    "start": "react-native start --reset-cache",
+    "start": "FIREBASE_APP_CHECK_DEBUG_TOKEN='42BFF18C-493F-4640-928A-B80E6A2BD5C8' react-native start --reset-cache",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "clean-gradle": "cd android && ./gradlew clean",
@@ -33,6 +33,7 @@
     "@react-native-async-storage/async-storage": "^1.16.1",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^14.5.0",
+    "@react-native-firebase/app-check": "^14.5.0",
     "@react-native-firebase/auth": "^14.5.0",
     "@react-native-firebase/firestore": "^14.5.0",
     "@react-navigation/bottom-tabs": "^6.0.9",

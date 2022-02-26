@@ -30,7 +30,7 @@ interface Player {
 }
 
 interface BowlerSession {
-  userId: string;
+  userId: string | undefined;
   sessionId: string;
   startTime: string;
   endTime: string;

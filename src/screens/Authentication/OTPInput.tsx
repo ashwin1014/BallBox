@@ -12,8 +12,8 @@ import {
 
 import {ArrowForward, Edit} from 'src/assets';
 import {View, Space, ErrorText, Button} from 'src/components';
+import {OTP_CELL_COUNT} from 'src/constants';
 import {useAuthentication} from 'src/context';
-import {useToggle} from 'src/hooks';
 import {commonStyles, theme} from 'src/theme';
 import {isPhoneNumberValid, isEmpty} from 'src/utils';
 
@@ -26,14 +26,14 @@ const OTPInput = () => {
   const [error, setError] = useState({number: '', otp: ''});
   const [number, setNumber] = useState('');
   const [otp, setOtp] = useState('');
-  const [showOTPInput, handleOtpInput] = useToggle(false);
-  const ref = useBlurOnFulfill({value: otp, cellCount: 4});
+  const [showOTPInput, handleOtpInput] = useState(false);
+  const ref = useBlurOnFulfill({value: otp, cellCount: OTP_CELL_COUNT});
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value: otp,
     setValue: setOtp,
   });
   const {phoneLogin, confirmOtpLogin, confirmSms} = useAuthentication();
-  console.log({confirmSms});
+  // console.log({confirmSms});
 
   const handleNumberSubmit = async () => {
     if (isEmpty(number)) {
@@ -63,9 +63,9 @@ const OTPInput = () => {
 
   useEffect(() => {
     if (!isEmpty(confirmSms)) {
-      handleOtpInput();
+      handleOtpInput(true);
     }
-  }, [confirmSms, handleOtpInput]);
+  }, [confirmSms]);
 
   return (
     <View fullWidth style={styles.otpContainer}>
@@ -96,7 +96,7 @@ const OTPInput = () => {
             <Space size="xxs">
               <Text>Enter OTP sent to +91{number}</Text>
               <IconBtn
-                onPress={handleOtpInput}
+                onPress={() => handleOtpInput(false)}
                 appearance="ghost"
                 accessoryLeft={<Edit />}
               />
@@ -106,7 +106,7 @@ const OTPInput = () => {
               {...props}
               value={otp}
               onChangeText={setOtp}
-              cellCount={6}
+              cellCount={OTP_CELL_COUNT}
               caretHidden={false}
               rootStyle={styles.codeFieldRoot}
               keyboardType="number-pad"

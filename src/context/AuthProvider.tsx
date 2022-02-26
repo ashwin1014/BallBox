@@ -30,6 +30,7 @@ interface AuthContextValue {
   addCoach: (data: Coach) => void;
   addPlayer: (data: Player) => void;
   confirmSms: FirebaseAuthTypes.ConfirmationResult | null;
+  userId: string | undefined;
 }
 
 function createCtx<A extends {} | null>() {
@@ -48,13 +49,24 @@ const [useAuthentication, AuthenticationProvider] =
   createCtx<AuthContextValue>();
 
 const AuthProvider = ({children}: {children: ReactNode}) => {
-  const [isAuthenticated, toggleAuthState] = useToggle(false);
-  const [isGuestUser, toggleGuestUserState] = useToggle(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isGuestUser, setIsGuestUser] = useState(false);
   const [loading, toggleLoading] = useToggle(false);
   const [confirmSms, setConfirmSms] =
     useState<FirebaseAuthTypes.ConfirmationResult | null>(null);
   const [profile, setProfile] =
     useImmer<Immutable<UserProfile | null>>(userProfile);
+  const [userId, setUserId] = useState<string | undefined>(undefined);
+
+  const toggleAuthState = useCallback(
+    () => setIsAuthenticated(prevState => !prevState),
+    [],
+  );
+
+  // const toggleGuestUserState = useCallback(
+  //   () => setIsGuestUser(prevState => !prevState),
+  //   [],
+  // );
 
   const phoneLogin = useCallback(
     async (phoneNumber: string) => {
@@ -84,8 +96,11 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     [toggleLoading],
   );
 
-  const handleAddNewUser = async (uid: string | undefined) => {
-    if (!uid) {
+  const handleAddNewUser = async (
+    uid: string | undefined,
+    phoneNumber: string | null | undefined,
+  ) => {
+    if (!uid || !phoneNumber) {
       return;
     }
 
@@ -93,7 +108,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
       userId: uid,
       name: '',
       email: '',
-      phone: '',
+      phone: phoneNumber,
       academy: '',
       photo: '',
       coaches: [],
@@ -127,18 +142,20 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
         const isNewUser = userDetails?.additionalUserInfo?.isNewUser;
         const isAnonymous = userDetails?.user.isAnonymous;
         const uid = userDetails?.user.uid;
+        const phoneNumber = userDetails?.user.phoneNumber;
+        setUserId(uid);
         // console.log({userDetails});
         // console.log({isNewUser});
         if (isNewUser && !isAnonymous) {
-          await handleAddNewUser(uid);
+          await handleAddNewUser(uid, phoneNumber);
         } else {
           Toast.show({
             type: 'info',
             text1: 'Welcome back!',
           });
         }
-        toggleAuthState();
-        toggleGuestUserState();
+        // toggleAuthState();
+        // toggleGuestUserState();
       } catch (e) {
         if (e instanceof Error) {
           console.error('confirmOtpLogin', e.message);
@@ -153,14 +170,18 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
         setConfirmSms(null);
       }
     },
-    [confirmSms, toggleAuthState, toggleGuestUserState, toggleLoading],
+    [confirmSms, toggleLoading],
   );
 
   const handleAnonymousLogin = useCallback(async () => {
     toggleLoading();
     try {
       await auth.signInAnonymously();
-      toggleGuestUserState();
+      // toggleGuestUserState();
+      Toast.show({
+        type: 'info',
+        text2: 'Welcome guest user!',
+      });
     } catch (error) {
       if (error instanceof Error) {
         console.error('handleAnonymousLogin', error.message);
@@ -172,21 +193,22 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     } finally {
       toggleLoading();
     }
-  }, [toggleGuestUserState, toggleLoading]);
+  }, [toggleLoading]);
 
   const handleSignOut = useCallback(async () => {
     toggleLoading();
     try {
       await auth.signOut();
-      toggleAuthState();
-      toggleGuestUserState();
+      // toggleAuthState();
+      // toggleGuestUserState();
       setProfile(null);
+      setUserId(undefined);
     } catch (error) {
       console.error(error);
     } finally {
       toggleLoading();
     }
-  }, [setProfile, toggleAuthState, toggleGuestUserState, toggleLoading]);
+  }, [setProfile, toggleLoading]);
 
   const addCoach = useCallback(
     data => {
@@ -223,14 +245,47 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
 
   const handleOnAuthStateChanged = useCallback(
     (user: FirebaseAuthTypes.User | null) => {
-      console.log({user: user});
-      if (user?.isAnonymous) {
-        // toggleGuestUserState();
-        console.log('Guest user');
+      // console.log('user', user);
+      if (user) {
+        setUserId(user.uid);
+        setIsGuestUser(true);
+        if (!user.isAnonymous) {
+          setIsAuthenticated(true);
+        }
+      } else {
+        setIsAuthenticated(false);
+        setIsGuestUser(false);
+        setUserId(undefined);
       }
     },
     [],
   );
+
+  // console.log('currentUser', auth.currentUser);
+  // console.log('userId', userId);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (isAuthenticated && userId) {
+        try {
+          const doc = await db.collection('users').doc(userId).get();
+          const userProfile = doc.data();
+          console.log('userProfile', userProfile);
+          setProfile(userProfile as UserProfile);
+        } catch (e) {
+          if (e instanceof Error) {
+            console.error('fetchUserProfile', e.message);
+            Toast.show({
+              type: 'error',
+              text1: 'Error fetching user profile',
+              text2: e.message,
+            });
+          }
+        }
+      }
+    };
+    fetchUserProfile();
+  }, [setProfile, userId, isAuthenticated]);
 
   useEffect(() => {
     const subscriber = auth.onAuthStateChanged(userState => {
@@ -238,7 +293,8 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     });
 
     return subscriber;
-  }, [handleOnAuthStateChanged]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const value = {
     isAuthenticated,
@@ -253,6 +309,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     phoneLogin,
     confirmOtpLogin,
     confirmSms,
+    userId,
   } as const;
 
   return (

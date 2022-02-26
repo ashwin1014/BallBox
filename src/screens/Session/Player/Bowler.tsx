@@ -4,12 +4,14 @@ import {ScrollView} from 'react-native';
 
 import RnBottomSheet from '@gorhom/bottom-sheet';
 import {Text, Layout, Button, Radio} from '@ui-kitten/components';
+import Toast from 'react-native-toast-message';
 import {useImmer} from 'use-immer';
 import {v4 as uuidv4} from 'uuid';
 
-import {View, BottomSheet} from 'src/components';
-import {useSession} from 'src/context';
+import {View, BottomSheet, OverlaySpinner} from 'src/components';
+import {useSession, useAuthentication} from 'src/context';
 import {bowlerLengths, bowlerAccuracies, wicket, runs} from 'src/context/mock';
+import {db} from 'src/firebase';
 import {Roles, Ball, BowlerSession} from 'src/types';
 import {isEmpty} from 'src/utils';
 
@@ -29,6 +31,7 @@ const INIT_STATE_ACC = {
 };
 
 const Bowler = () => {
+  const {userId} = useAuthentication();
   const {
     selectedBowler,
     bowlerSessionTime,
@@ -44,6 +47,7 @@ const Bowler = () => {
     useState<typeof INIT_STATE_ACC>(INIT_STATE_ACC);
   const [deliveryNumber, setDeliveryNumber] = useState(1);
   const [balls, setBalls] = useImmer<Ball[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const bottomSheetRef = useRef<RnBottomSheet>(null);
 
@@ -93,19 +97,60 @@ const Bowler = () => {
     setEndActiveSession(true);
   };
 
-  const saveSessionDetails = useCallback(() => {
+  const onCancelSession = () => {
+    setStartSession(false);
+    handleSessionReset(Roles.BOWLER);
+    handleStateReset(true);
+  };
+
+  const onStartSession = () => {
+    handleStartTime(Roles.BOWLER);
+    setStartSession(true);
+  };
+
+  const saveSessionDetails = useCallback(async () => {
     const endTime = new Date().toISOString();
+    const sessionId = uuidv4();
     const sessionPayload: BowlerSession = {
-      userId: 'u1',
-      sessionId: uuidv4(),
+      userId,
+      sessionId,
       startTime,
       endTime,
       type: 'bowler',
       balls,
     };
-    console.log(sessionPayload);
-    handleStateReset(true);
-  }, [balls, handleStateReset, startTime]);
+    // console.log(sessionPayload);
+    // handleStateReset(true);
+    if (balls.length > 0) {
+      setLoading(true);
+      try {
+        await db
+          .collection('bowling_session')
+          .doc(userId)
+          .collection('user_bowling_session')
+          .doc(sessionId)
+          .set(sessionPayload);
+        Toast.show({
+          type: 'success',
+          text1: 'Success',
+          text2: 'Session saved successfully',
+        });
+        onCancelSession();
+      } catch (e) {
+        if (e instanceof Error) {
+          console.error('saveSessionDetails', e.message);
+          Toast.show({
+            type: 'error',
+            text1: 'Error saving session',
+            text2: e.message,
+          });
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [balls, startTime, userId]);
 
   const handleDetail = (type: string) => (value: string) => {
     if (value === 'run' || value === 'wicket') {
@@ -125,17 +170,6 @@ const Bowler = () => {
     handleSheetClose();
   };
 
-  const onCancelSession = () => {
-    setStartSession(false);
-    handleSessionReset(Roles.BOWLER);
-    handleStateReset(true);
-  };
-
-  const onStartSession = () => {
-    handleStartTime(Roles.BOWLER);
-    setStartSession(true);
-  };
-
   useEffect(() => {
     if (endActiveSession) {
       saveSessionDetails();
@@ -144,6 +178,7 @@ const Bowler = () => {
 
   return (
     <>
+      <OverlaySpinner loading={loading} />
       <Layout style={styles.tabContainer}>
         {!sessionStart ? (
           <>

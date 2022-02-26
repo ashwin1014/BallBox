@@ -12,6 +12,7 @@ import {IndexPath} from '@ui-kitten/components';
 import {Immutable} from 'immer';
 
 import {useAuthentication} from 'src/context';
+// import {db} from 'src/firebase';
 import {Player, Roles} from 'src/types';
 
 // import {userProfile} from './mock';

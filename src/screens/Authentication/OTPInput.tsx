@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 
 import {StyleSheet, SafeAreaView, Text as RnText, Keyboard} from 'react-native';
 
@@ -50,9 +50,6 @@ const OTPInput = () => {
     Keyboard.dismiss();
     setError(prevState => ({...prevState, number: ''}));
     await phoneLogin(number);
-    if (!isEmpty(confirmSms)) {
-      handleOtpInput();
-    }
   };
 
   const handleLogin = () => {
@@ -60,10 +57,15 @@ const OTPInput = () => {
       setError(prevState => ({...prevState, otp: 'Please enter OTP'}));
       return;
     }
+    Keyboard.dismiss();
     confirmOtpLogin(otp);
-    // toggleAuthState();
-    // toggleGuestUserState();
   };
+
+  useEffect(() => {
+    if (!isEmpty(confirmSms)) {
+      handleOtpInput();
+    }
+  }, [confirmSms, handleOtpInput]);
 
   return (
     <View fullWidth style={styles.otpContainer}>

@@ -73,6 +73,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
           console.error('phoneLogin', e.message);
           Toast.show({
             type: 'error',
+            text1: 'OTP Send Error',
             text2: e.message,
           });
         }
@@ -102,7 +103,20 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     try {
       await db.collection('users').doc(uid).set(userObj);
       // await db.collection('users').doc('preferences').set(userObj);
-    } catch {}
+      Toast.show({
+        type: 'info',
+        text1: 'Welcome on board!',
+      });
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error('handleAddNewUser', e.message);
+        Toast.show({
+          type: 'error',
+          text1: 'Error creating user',
+          text2: e.message,
+        });
+      }
+    }
   };
 
   const confirmOtpLogin = useCallback(
@@ -111,11 +125,17 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
       try {
         const userDetails = await confirmSms?.confirm(otp);
         const isNewUser = userDetails?.additionalUserInfo?.isNewUser;
+        const isAnonymous = userDetails?.user.isAnonymous;
         const uid = userDetails?.user.uid;
-        console.log({userDetails});
-        console.log({isNewUser});
-        if (isNewUser) {
+        // console.log({userDetails});
+        // console.log({isNewUser});
+        if (isNewUser && !isAnonymous) {
           await handleAddNewUser(uid);
+        } else {
+          Toast.show({
+            type: 'info',
+            text1: 'Welcome back!',
+          });
         }
         toggleAuthState();
         toggleGuestUserState();
@@ -124,6 +144,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
           console.error('confirmOtpLogin', e.message);
           Toast.show({
             type: 'error',
+            text1: 'OTP Error',
             text2: e.message,
           });
         }

@@ -6,6 +6,7 @@ export {default as Button} from './uiKit/Button';
 export {default as ErrorText} from './uiKit/ErrorText';
 export {default as AutoImage} from './uiKit/AutoImage';
 export {default as BottomSheet} from './uiKit/BottomSheet';
+export {default as IconButton} from './uiKit/IconButton';
 //uiComponents
 export {default as AppLayout} from './uiComponents/Layout';
 export {default as OverlaySpinner} from './uiComponents/OverlaySpinner';

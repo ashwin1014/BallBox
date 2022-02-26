@@ -25,7 +25,7 @@ const INIT_STATE_DETAIL = {
 
 const INIT_STATE_ACC = {
   runs: 0,
-  wicketType: '',
+  wicketType: 'bowled',
 };
 
 const Bowler = () => {
@@ -143,112 +143,114 @@ const Bowler = () => {
   }, [endActiveSession, saveSessionDetails]);
 
   return (
-    <Layout style={styles.tabContainer}>
-      {!sessionStart ? (
-        <>
-          <PlayerSelect type={Roles.BOWLER} />
-          <Button disabled={isEmpty(playerName)} onPress={onStartSession}>
-            Start Session
-          </Button>
-        </>
-      ) : (
-        <>
-          <HeaderDetails
-            playerName={playerName}
-            startTime={startTime}
-            deliveryNumber={deliveryNumber}
-          />
-          <ScrollView style={styles.inputsContainer}>
-            <View row spread>
-              <View>
-                <Text category="h5" style={styles.label}>
-                  Accuracy
-                </Text>
-                {bowlerAccuracies.map(({key, value}) => (
-                  <View style={styles.controlContainer} key={key}>
-                    <Radio
-                      style={styles.radio}
-                      status="control"
-                      checked={ballDetail.accuracy === key}
-                      onChange={() => handleDetail('accuracy')(key)}>
-                      {value}
-                    </Radio>
-                  </View>
-                ))}
-              </View>
-              <View style={styles.separator} />
-              <View>
-                <Text category="h5" style={styles.label}>
-                  Length
-                </Text>
-                {bowlerLengths.map(({key, value}) => (
-                  <View style={styles.controlContainer} key={key}>
-                    <Radio
-                      style={styles.radio}
-                      status="control"
-                      checked={ballDetail.length === key}
-                      onChange={() => handleDetail('length')(key)}>
-                      {value}
-                    </Radio>
-                  </View>
-                ))}
-              </View>
-            </View>
-          </ScrollView>
-          <SessionActions
-            onCancelSession={onCancelSession}
-            handleNextBall={handleNextBall}
-            disableNextBall={
-              isEmpty(ballDetail.length) || isEmpty(ballDetail.accuracy)
-            }
-            disableEndSession={isEmpty(balls)}
-            handleSessionEnd={handleSessionEnd}
-          />
-          <BottomSheet
-            ref={bottomSheetRef}
-            snapPoints={snapPoints}
-            handleSheetClose={handleSheetClose}
-            title={`Select ${modalType}`}
-            titleStyle={styles.sheetTitle}>
-            <View>
-              {modalType === 'run' ? (
-                <>
-                  {runs.map(value => (
-                    <View key={value} style={styles.radio}>
+    <>
+      <Layout style={styles.tabContainer}>
+        {!sessionStart ? (
+          <>
+            <PlayerSelect type={Roles.BOWLER} />
+            <Button disabled={isEmpty(playerName)} onPress={onStartSession}>
+              Start Session
+            </Button>
+          </>
+        ) : (
+          <>
+            <HeaderDetails
+              playerName={playerName}
+              startTime={startTime}
+              deliveryNumber={deliveryNumber}
+            />
+            <ScrollView style={styles.inputsContainer}>
+              <View row spread>
+                <View>
+                  <Text category="h5" style={styles.label}>
+                    Accuracy
+                  </Text>
+                  {bowlerAccuracies.map(({key, value}) => (
+                    <View style={styles.controlContainer} key={key}>
                       <Radio
                         style={styles.radio}
-                        status="primary"
-                        checked={accuracyDetail.runs === value}
-                        onChange={() => handleAccuracyDetail('runs', value)}>
-                        {value === 0
-                          ? 'No Run'
-                          : value === 1
-                          ? '1 Run'
-                          : `${value} Runs`}
-                      </Radio>
-                    </View>
-                  ))}
-                </>
-              ) : (
-                <>
-                  {wicket.map(({key, value}) => (
-                    <View key={key} style={styles.radio}>
-                      <Radio
-                        style={styles.radio}
-                        status="primary"
-                        checked={accuracyDetail.wicketType === key}
-                        onChange={() => handleAccuracyDetail('wicket', key)}>
+                        status="control"
+                        checked={ballDetail.accuracy === key}
+                        onChange={() => handleDetail('accuracy')(key)}>
                         {value}
                       </Radio>
                     </View>
                   ))}
-                </>
-              )}
-            </View>
-          </BottomSheet>
+                </View>
+                <View style={styles.separator} />
+                <View>
+                  <Text category="h5" style={styles.label}>
+                    Length
+                  </Text>
+                  {bowlerLengths.map(({key, value}) => (
+                    <View style={styles.controlContainer} key={key}>
+                      <Radio
+                        style={styles.radio}
+                        status="control"
+                        checked={ballDetail.length === key}
+                        onChange={() => handleDetail('length')(key)}>
+                        {value}
+                      </Radio>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            </ScrollView>
+            <SessionActions
+              onCancelSession={onCancelSession}
+              handleNextBall={handleNextBall}
+              disableNextBall={
+                isEmpty(ballDetail.length) || isEmpty(ballDetail.accuracy)
+              }
+              disableEndSession={isEmpty(balls)}
+              handleSessionEnd={handleSessionEnd}
+            />
+          </>
+        )}
+      </Layout>
+      <BottomSheet
+        ref={bottomSheetRef}
+        snapPoints={snapPoints}
+        handleSheetClose={handleSheetClose}
+        title={`Select ${modalType}`}
+        titleStyle={styles.sheetTitle}>
+        <>
+          {modalType === 'run' ? (
+            <>
+              {runs.map(value => (
+                <View key={value} style={styles.radio}>
+                  <Radio
+                    style={styles.radio}
+                    status="primary"
+                    checked={accuracyDetail.runs === value}
+                    onChange={() => handleAccuracyDetail('runs', value)}>
+                    {value === 0
+                      ? 'No Run'
+                      : value === 1
+                      ? '1 Run'
+                      : `${value} Runs`}
+                  </Radio>
+                </View>
+              ))}
+            </>
+          ) : (
+            <ScrollView style={{height: 140}}>
+              {wicket.map(({key, value}) => (
+                <View key={key} style={styles.radio}>
+                  <Radio
+                    style={styles.radio}
+                    status="primary"
+                    checked={accuracyDetail.wicketType === key}
+                    onChange={() => handleAccuracyDetail('wicket', key)}>
+                    {value}
+                  </Radio>
+                </View>
+              ))}
+            </ScrollView>
+          )}
         </>
-      )}
-    </Layout>
+      </BottomSheet>
+    </>
   );
 };
 

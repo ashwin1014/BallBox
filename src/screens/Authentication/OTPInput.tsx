@@ -1,37 +1,21 @@
 import {useState, useEffect} from 'react';
 
-import {StyleSheet, SafeAreaView, Text as RnText, Keyboard} from 'react-native';
+import {StyleSheet, SafeAreaView, Keyboard} from 'react-native';
 
 import {Text, Input, Button as IconBtn} from '@ui-kitten/components';
-import {
-  CodeField,
-  Cursor,
-  useBlurOnFulfill,
-  useClearByFocusCell,
-} from 'react-native-confirmation-code-field';
 
 import {ArrowForward, Edit} from 'src/assets';
-import {View, Space, ErrorText, Button} from 'src/components';
-import {OTP_CELL_COUNT} from 'src/constants';
+import {View, Space, ErrorText, Button, OtpFields} from 'src/components';
 import {useAuthentication} from 'src/context';
 import {commonStyles, theme} from 'src/theme';
 import {isPhoneNumberValid, isEmpty} from 'src/utils';
-
-// type OTPInputProps = {
-//   toggleAuthState: () => void;
-//   toggleGuestUserState: () => void;
-// };
 
 const OTPInput = () => {
   const [error, setError] = useState({number: '', otp: ''});
   const [number, setNumber] = useState('');
   const [otp, setOtp] = useState('');
   const [showOTPInput, handleOtpInput] = useState(false);
-  const ref = useBlurOnFulfill({value: otp, cellCount: OTP_CELL_COUNT});
-  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
-    value: otp,
-    setValue: setOtp,
-  });
+
   const {phoneLogin, confirmOtpLogin, confirmSms} = useAuthentication();
   // console.log({confirmSms});
 
@@ -101,28 +85,7 @@ const OTPInput = () => {
                 accessoryLeft={<Edit />}
               />
             </Space>
-            <CodeField
-              ref={ref}
-              {...props}
-              value={otp}
-              onChangeText={setOtp}
-              cellCount={OTP_CELL_COUNT}
-              caretHidden={false}
-              rootStyle={styles.codeFieldRoot}
-              keyboardType="number-pad"
-              textContentType="oneTimeCode"
-              renderCell={({index, symbol, isFocused}) => (
-                <RnText
-                  key={index}
-                  style={[styles.cell, isFocused && styles.focusCell]}
-                  onLayout={getCellOnLayoutHandler(index)}>
-                  {symbol || (isFocused ? <Cursor /> : null)}
-                </RnText>
-              )}
-            />
-            {error.otp ? (
-              <ErrorText text={error.otp} style={commonStyles.mhAuto} />
-            ) : null}
+            <OtpFields otp={otp} setOtp={setOtp} error={error.otp} />
             <Button
               titleProps={{
                 style: styles.loginBtnText,
@@ -160,23 +123,6 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
   },
   root: {padding: 30},
-  codeFieldRoot: {marginTop: 20},
-  cell: {
-    borderColor: theme.colors.border,
-    width: 44,
-    height: 44,
-    lineHeight: 40,
-    fontSize: 24,
-    borderWidth: 2,
-    borderRadius: 8,
-    margin: 4,
-    color: theme.colors.text,
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-  },
-  focusCell: {
-    borderColor: '#000',
-  },
   loginBtnText: {
     color: theme.palette.p8,
   },

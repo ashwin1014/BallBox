@@ -39,6 +39,19 @@ const styles = StyleSheet.create({
   card: {
     margin: 2,
   },
+  confirmModalFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 15,
+  },
+  confirmModalButton: {
+    flexGrow: 1,
+    marginLeft: 5,
+  },
+  cancelModalButton: {
+    flexGrow: 1,
+    marginRight: 5,
+  },
 });
 
 export default styles;

@@ -24,6 +24,7 @@ const palette = {
 //https://akveo.github.io/react-native-ui-kitten/docs/design-system/eva-light-theme
 const evaThemes = {
   'color-primary-default': palette.p3,
+  'color-primary-default-border': palette.p3,
   'color-primary-active': palette.p10,
   'color-primary-disabled': palette.p12,
   'text-basic-color': palette.p5,

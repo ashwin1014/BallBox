@@ -84,6 +84,9 @@ const styles = StyleSheet.create({
   textCenter: {
     textAlign: 'center',
   },
+  backdrop: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
 });
 
 export default styles;

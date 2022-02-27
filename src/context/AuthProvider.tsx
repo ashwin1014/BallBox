@@ -15,7 +15,7 @@ import {auth, FirebaseAuthTypes, db} from 'src/firebase';
 import {useToggle} from 'src/hooks';
 import {UserProfile, Coach, Player} from 'src/types';
 
-import {userProfile} from './mock';
+// import {userProfile} from './mock';
 
 interface AuthContextValue {
   isAuthenticated: boolean;
@@ -52,11 +52,10 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isGuestUser, setIsGuestUser] = useState(false);
   const [loading, toggleLoading] = useToggle(false);
+  const [profile, setProfile] = useImmer<Immutable<UserProfile | null>>(null);
+  const [userId, setUserId] = useState<string | undefined>(undefined);
   const [confirmSms, setConfirmSms] =
     useState<FirebaseAuthTypes.ConfirmationResult | null>(null);
-  const [profile, setProfile] =
-    useImmer<Immutable<UserProfile | null>>(userProfile);
-  const [userId, setUserId] = useState<string | undefined>(undefined);
 
   const toggleAuthState = useCallback(
     () => setIsAuthenticated(prevState => !prevState),
@@ -104,13 +103,15 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
       return;
     }
 
-    const userObj = {
+    const userObj: UserProfile = {
       userId: uid,
       name: '',
       email: '',
       phone: phoneNumber,
       academy: '',
       photo: '',
+      userType: 'regular',
+      isPremiumUser: false,
       coaches: [],
       players: [],
     };
@@ -177,7 +178,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     toggleLoading();
     try {
       await auth.signInAnonymously();
-      // toggleGuestUserState();
+      // setIsGuestUser(true);
       Toast.show({
         type: 'info',
         text2: 'Welcome guest user!',
@@ -247,9 +248,9 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     (user: FirebaseAuthTypes.User | null) => {
       // console.log('user', user);
       if (user) {
-        setUserId(user.uid);
         setIsGuestUser(true);
         if (!user.isAnonymous) {
+          setUserId(user.uid);
           setIsAuthenticated(true);
         }
       } else {
@@ -270,7 +271,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
         try {
           const doc = await db.collection('users').doc(userId).get();
           const userProfile = doc.data();
-          console.log('userProfile', userProfile);
+          // console.log('userProfile', userProfile);
           setProfile(userProfile as UserProfile);
         } catch (e) {
           if (e instanceof Error) {

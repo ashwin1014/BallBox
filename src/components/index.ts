@@ -10,3 +10,5 @@ export {default as IconButton} from './uiKit/IconButton';
 //uiComponents
 export {default as AppLayout} from './uiComponents/Layout';
 export {default as OverlaySpinner} from './uiComponents/OverlaySpinner';
+export {default as OtpFields} from './uiComponents/OtpFields';
+export {default as ConfirmModal} from './uiComponents/ConfirmModal';

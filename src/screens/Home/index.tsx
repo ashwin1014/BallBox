@@ -19,7 +19,7 @@ type TabRouteProps = AnalysisTabScreenProp &
 
 const Home = () => {
   const {navigate} = useNavigation<TabRouteProps>();
-  const {isAuthenticated, handleSignOut} = useAuthentication();
+  const {isAuthenticated, handleSignOut, isGuestUser} = useAuthentication();
   return (
     <>
       <AppLayout>
@@ -42,11 +42,12 @@ const Home = () => {
             onPress={() => navigate(MAIN_TABS.ANALYSIS)}>
             Analyse Player
           </Button>
-          {isAuthenticated && (
-            <Button appearance="outline" onPress={handleSignOut}>
-              Logout
-            </Button>
+          {isGuestUser && !isAuthenticated && (
+            <Text>Logged in as guest user</Text>
           )}
+          <Button appearance="outline" onPress={handleSignOut}>
+            {isAuthenticated ? 'Sign Out' : 'Sign In as Regular User'}
+          </Button>
         </View>
       </AppLayout>
     </>

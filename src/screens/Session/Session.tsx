@@ -2,33 +2,42 @@ import {useState} from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {Tab, TabView} from '@ui-kitten/components';
+import {Tab, TabView, Button, Text} from '@ui-kitten/components';
 
-import {AppLayout, View} from 'src/components';
+import {AppLayout, View, Space} from 'src/components';
+import {useAuthentication} from 'src/context';
 import {theme} from 'src/theme';
 
 import Batsmen from './Player/Batsmen';
 import Bowler from './Player/Bowler';
 
 const Session = () => {
+  const {isAuthenticated, handleSignOut} = useAuthentication();
   const [tabIndex, setTabIndex] = useState(0);
 
   return (
     <>
       <AppLayout>
         <View style={styles.container}>
-          <View>
-            <TabView
-              selectedIndex={tabIndex}
-              onSelect={index => setTabIndex(index)}>
-              <Tab title="BOWLER">
-                <Bowler />
-              </Tab>
-              <Tab title="BATSMAN">
-                <Batsmen />
-              </Tab>
-            </TabView>
-          </View>
+          {isAuthenticated ? (
+            <View>
+              <TabView
+                selectedIndex={tabIndex}
+                onSelect={index => setTabIndex(index)}>
+                <Tab title="BOWLER">
+                  <Bowler />
+                </Tab>
+                <Tab title="BATSMAN">
+                  <Batsmen />
+                </Tab>
+              </TabView>
+            </View>
+          ) : (
+            <Space direction="vertical">
+              <Text>Please login as a regular user to create session</Text>
+              <Button onPress={handleSignOut}>Login</Button>
+            </Space>
+          )}
         </View>
       </AppLayout>
     </>

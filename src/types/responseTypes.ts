@@ -8,6 +8,7 @@ interface UserProfile {
   coaches?: Coach[];
   players?: Player[];
   userType?: 'guest' | 'admin' | 'regular';
+  isPremiumUser?: boolean;
 }
 
 interface Coach {

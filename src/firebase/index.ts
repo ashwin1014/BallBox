@@ -4,5 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 const auth = firebaseAuth();
 const db = firestore();
 
-export {auth, db};
+const usersRef = db.collection('users');
+
+export {auth, db, usersRef};
 export type {FirebaseAuthTypes};

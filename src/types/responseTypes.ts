@@ -24,7 +24,7 @@ interface Player {
   name?: string;
   number?: string;
   photo?: string;
-  role: Array<Roles>;
+  role?: Array<Roles>;
   style?: string;
   specialty?: string;
   order?: string;

@@ -49,7 +49,8 @@ const Bowler = () => {
   const [deliveryNumber, setDeliveryNumber] = useState(1);
   const [balls, setBalls] = useImmer<Ball[]>([]);
   const [loading, setLoading] = useState(false);
-  const [modal, toggleModal] = useToggle(false);
+  const [endSessionConfirm, toggleEndSessionConfirm] = useToggle(false);
+  const [cancelSessionConfirm, toggleCancelSessionConfirm] = useToggle(false);
 
   const bottomSheetRef = useRef<RnBottomSheet>(null);
 
@@ -102,11 +103,14 @@ const Bowler = () => {
     handleStateReset();
   };
 
-  const handleCancelSession = () => {
+  const handleCancelSession = (isCancel = false) => {
     setDeliveryNumber(1);
     setStartSession(false);
     handleSessionReset(Roles.BOWLER);
     handleStateReset(true);
+    if (isCancel) {
+      toggleCancelSessionConfirm();
+    }
   };
 
   const onStartSession = () => {
@@ -167,7 +171,7 @@ const Bowler = () => {
       balls: ballsPayload,
     };
     saveSessionDetails(sessionPayload);
-    toggleModal();
+    toggleEndSessionConfirm();
   };
 
   const handleDetail = (type: string) => (value: string) => {
@@ -244,13 +248,13 @@ const Bowler = () => {
               </View>
             </ScrollView>
             <SessionActions
-              onCancelSession={handleCancelSession}
+              onCancelSession={toggleCancelSessionConfirm}
               handleNextBall={handleNextBall}
               disableNextBall={
                 isEmpty(ballDetail.length) || isEmpty(ballDetail.accuracy)
               }
               disableEndSession={isEmpty(balls)}
-              handleSessionEnd={toggleModal}
+              handleSessionEnd={toggleEndSessionConfirm}
             />
           </>
         )}
@@ -297,13 +301,22 @@ const Bowler = () => {
           )}
         </>
       </BottomSheet>
-      {modal && (
+      {endSessionConfirm && (
         <ConfirmModal
-          visible={modal}
-          onCancel={toggleModal}
+          visible={endSessionConfirm}
+          onCancel={toggleEndSessionConfirm}
           onConfirm={confirmSessionEnd}
           // onModalClose={saveSessionDetails}
           title="Are you sure you want to end ongoing session?"
+        />
+      )}
+      {cancelSessionConfirm && (
+        <ConfirmModal
+          visible={cancelSessionConfirm}
+          onCancel={toggleCancelSessionConfirm}
+          onConfirm={() => handleCancelSession(true)}
+          // onModalClose={saveSessionDetails}
+          title="Are you sure you want to cancel ongoing session?"
         />
       )}
     </>

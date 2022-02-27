@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
+  flexGrow1: {
+    flexGrow: 1,
+  },
 });
 
 export default styles;

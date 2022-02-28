@@ -3,6 +3,7 @@ enum MAIN_STACK {
   TOS = 'TermsOfService',
   PRIVACY = 'PrivacyPolicy',
   TABS = 'Tabs',
+  PROFILE = 'Profile',
 }
 
 enum SESSION_TABS {

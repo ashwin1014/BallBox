@@ -25,6 +25,7 @@ import {
   Analysis,
   Coach,
   Session,
+  Profile,
 } from 'src/screens';
 
 import {navigationRef} from './utils';
@@ -36,6 +37,7 @@ type NavigationParamList = {
   [MAIN_STACK.TOS]: undefined;
   [MAIN_STACK.PRIVACY]: undefined;
   [MAIN_STACK.TABS]: undefined;
+  [MAIN_STACK.PROFILE]: undefined;
 };
 
 type BottomTabParamsList = {
@@ -96,6 +98,7 @@ const AppStack = () => (
     }}
     initialRouteName={MAIN_STACK.TABS}>
     <Stack.Screen name={MAIN_STACK.TABS} component={TabNavigator} />
+    <Stack.Screen name={MAIN_STACK.PROFILE} component={Profile} />
   </Stack.Navigator>
 );
 

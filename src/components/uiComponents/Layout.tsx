@@ -9,13 +9,19 @@ import Header, {HeaderProps} from './Header';
 
 interface AppLayoutProps extends LayoutProps {
   headerProps?: HeaderProps;
+  showHeader?: boolean;
 }
 
-const AppLayout = ({children, headerProps, ...rest}: AppLayoutProps) => {
+const AppLayout = ({
+  children,
+  headerProps,
+  showHeader,
+  ...rest
+}: AppLayoutProps) => {
   return (
     <SafeAreaView>
       <Layout style={styles.container} {...rest}>
-        <Header showBackButton={false} {...headerProps} />
+        {showHeader ? <Header showBackButton={false} {...headerProps} /> : null}
         {children}
       </Layout>
     </SafeAreaView>
@@ -23,6 +29,10 @@ const AppLayout = ({children, headerProps, ...rest}: AppLayoutProps) => {
 };
 
 export default AppLayout;
+
+AppLayout.defaultProps = {
+  showHeader: true,
+};
 
 const styles = StyleSheet.create({
   container: {

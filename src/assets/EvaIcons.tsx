@@ -59,6 +59,10 @@ const Edit = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
   <Icon {...props} name="edit-2-outline" />
 );
 
+const Logout = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
+  <Icon {...props} name="log-out" />
+);
+
 export {
   HeartIcon,
   BackIcon,
@@ -72,4 +76,5 @@ export {
   MoreVertical,
   CloseOutline,
   Edit,
+  Logout,
 };

@@ -13,9 +13,7 @@ import {useImmer} from 'use-immer';
 
 import {auth, FirebaseAuthTypes, db} from 'src/firebase';
 import {useToggle} from 'src/hooks';
-import {UserProfile, Coach, Player} from 'src/types';
-
-// import {userProfile} from './mock';
+import {UserProfile} from 'src/types';
 
 interface AuthContextValue {
   isAuthenticated: boolean;
@@ -27,8 +25,6 @@ interface AuthContextValue {
   phoneLogin: (phoneNumber: string) => Promise<void>;
   confirmOtpLogin: (otp: string) => Promise<void>;
   profile: Immutable<UserProfile | null>;
-  addCoach: (data: Coach) => void;
-  addPlayer: (data: Player) => void;
   confirmSms: FirebaseAuthTypes.ConfirmationResult | null;
   userId: string | undefined;
 }
@@ -200,49 +196,20 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     toggleLoading();
     try {
       await auth.signOut();
-      // toggleAuthState();
-      // toggleGuestUserState();
       setProfile(null);
       setUserId(undefined);
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        console.error('handleSignOut', error.message);
+        Toast.show({
+          type: 'error',
+          text2: error.message,
+        });
+      }
     } finally {
       toggleLoading();
     }
   }, [setProfile, toggleLoading]);
-
-  const addCoach = useCallback(
-    data => {
-      setProfile(draft => {
-        draft?.coaches?.push({
-          id: 'c_' + Math.random(),
-          name: data.name,
-          number: data.number,
-          photo: data.imgUrl,
-          academy: data.academy,
-        });
-      });
-    },
-    [setProfile],
-  );
-
-  const addPlayer = useCallback(
-    data => {
-      setProfile(draft => {
-        draft?.players?.push({
-          id: 'p_' + Math.random(),
-          name: data.name,
-          number: data.number,
-          photo: data.imgUrl,
-          role: data.role,
-          specialty: data.specialty,
-          style: data.style,
-          order: data.order,
-        });
-      });
-    },
-    [setProfile],
-  );
 
   const handleOnAuthStateChanged = useCallback(
     (user: FirebaseAuthTypes.User | null) => {
@@ -303,8 +270,6 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     isGuestUser,
     toggleGuestUserState: handleAnonymousLogin,
     profile,
-    addCoach,
-    addPlayer,
     loading,
     handleSignOut,
     phoneLogin,

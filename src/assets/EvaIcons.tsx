@@ -63,6 +63,10 @@ const Logout = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
   <Icon {...props} name="log-out" />
 );
 
+const Delete = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
+  <Icon {...props} name="trash-2-outline" />
+);
+
 export {
   HeartIcon,
   BackIcon,
@@ -77,4 +81,5 @@ export {
   CloseOutline,
   Edit,
   Logout,
+  Delete,
 };

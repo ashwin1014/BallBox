@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, Dispatch} from 'react';
 
 import {StyleSheet, SafeAreaView, Keyboard} from 'react-native';
 
@@ -10,11 +10,15 @@ import {useAuthentication} from 'src/context';
 import {commonStyles, theme} from 'src/theme';
 import {isPhoneNumberValid, isEmpty} from 'src/utils';
 
-const OTPInput = () => {
+interface OTPInputProps {
+  showOTPInput: boolean;
+  handleOtpInput: Dispatch<boolean>;
+}
+
+const OTPInput = ({showOTPInput, handleOtpInput}: OTPInputProps) => {
   const [error, setError] = useState({number: '', otp: ''});
   const [number, setNumber] = useState('');
   const [otp, setOtp] = useState('');
-  const [showOTPInput, handleOtpInput] = useState(false);
 
   const {phoneLogin, confirmOtpLogin, confirmSms} = useAuthentication();
   // console.log({confirmSms});
@@ -49,7 +53,7 @@ const OTPInput = () => {
     if (!isEmpty(confirmSms)) {
       handleOtpInput(true);
     }
-  }, [confirmSms]);
+  }, [confirmSms, handleOtpInput]);
 
   return (
     <View fullWidth style={styles.otpContainer}>

@@ -1,3 +1,5 @@
+import {useState} from 'react';
+
 import {StyleSheet, Pressable, KeyboardAvoidingView} from 'react-native';
 
 import {useNavigation} from '@react-navigation/native';
@@ -15,6 +17,7 @@ import OTPInput from './OTPInput';
 const Authentication = () => {
   const {navigate} = useNavigation<TOSScreenProp & PrivacyScreenProp>();
   const {toggleGuestUserState, loading} = useAuthentication();
+  const [showOTPInput, handleOtpInput] = useState(false);
 
   return (
     <KeyboardAvoidingView>
@@ -25,28 +28,34 @@ const Authentication = () => {
             <Text category="h2">The Ball-Box</Text>
           </Space>
         </View>
-        <OTPInput />
-        <View style={styles.tos}>
-          <Text>
-            By signing in, you agree to our{' '}
-            <Text style={styles.link} onPress={() => navigate(MAIN_STACK.TOS)}>
-              Terms of service
-            </Text>{' '}
-            and{' '}
-            <Text
-              style={styles.link}
-              onPress={() => navigate(MAIN_STACK.PRIVACY)}>
-              Privacy Policy
-            </Text>
-          </Text>
-        </View>
-        <View style={styles.footer}>
-          <Pressable style={styles.guestBtn} onPress={toggleGuestUserState}>
-            <Text category="h6" appearance="hint">
-              Continue as guest
-            </Text>
-          </Pressable>
-        </View>
+        <OTPInput showOTPInput={showOTPInput} handleOtpInput={handleOtpInput} />
+        {!showOTPInput && (
+          <>
+            <View style={styles.tos}>
+              <Text>
+                By signing in, you agree to our{' '}
+                <Text
+                  style={styles.link}
+                  onPress={() => navigate(MAIN_STACK.TOS)}>
+                  Terms of service
+                </Text>{' '}
+                and{' '}
+                <Text
+                  style={styles.link}
+                  onPress={() => navigate(MAIN_STACK.PRIVACY)}>
+                  Privacy Policy
+                </Text>
+              </Text>
+            </View>
+            <View style={styles.footer}>
+              <Pressable style={styles.guestBtn} onPress={toggleGuestUserState}>
+                <Text category="h6" appearance="hint">
+                  Continue as guest
+                </Text>
+              </Pressable>
+            </View>
+          </>
+        )}
       </View>
       <OverlaySpinner loading={loading} />
     </KeyboardAvoidingView>

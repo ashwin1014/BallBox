@@ -10,6 +10,7 @@ import {
   ListItem,
   Divider,
 } from '@ui-kitten/components';
+import {format, parseISO} from 'date-fns';
 
 import {BackIcon, Person, Edit} from 'src/assets';
 import {AppLayout, View, Center} from 'src/components';
@@ -19,18 +20,18 @@ import {theme} from 'src/theme';
 const Profile = () => {
   const {goBack} = useNavigation();
   const {isAuthenticated, profile} = useAuthentication();
-  console.log('profile', profile);
+  // console.log('profile', profile);
 
   return (
     <AppLayout showHeader={false}>
       <TopNavigation
-        style={{backgroundColor: '#FFF'}}
+        style={styles.topNavigation}
         accessoryLeft={<TopNavigationAction icon={BackIcon} onPress={goBack} />}
         accessoryRight={
           isAuthenticated ? <TopNavigationAction icon={Edit} /> : <></>
         }
       />
-      <View style={styles.container}>
+      <View flex>
         {isAuthenticated ? (
           <>
             <View style={styles.dropContainer} />
@@ -45,18 +46,38 @@ const Profile = () => {
                     style={styles.avatarIcon}
                   />
                 )}
-                <View marginV={10}>
+                <View marginV={10} aiCenter>
                   {profile?.name ? (
                     <Text category="s1">{profile?.name}</Text>
                   ) : null}
-                  <Text category="s2">{profile?.phone}</Text>
-                  <Text category="s2">{profile?.email}</Text>
+                  <Text category="label">{profile?.phone}</Text>
                 </View>
                 <View marginV={20}>
                   <ListItem
+                    title={'Email'}
+                    description={profile?.email ? profile?.email : '-'}
+                    style={styles.listStyle}
+                  />
+                  <Divider />
+                  <ListItem
+                    title={'Academy'}
+                    description={profile?.academy ? profile?.academy : '-'}
+                    style={styles.listStyle}
+                  />
+                  <Divider />
+                  <ListItem
                     title={'Premium User'}
                     description={profile?.isPremiumUser ? 'Yes' : 'No'}
-                    style={{width: '100%'}}
+                    style={styles.listStyle}
+                  />
+                  <Divider />
+                  <ListItem
+                    title={'Member Since'}
+                    description={
+                      profile?.createdDate &&
+                      format(parseISO(profile?.createdDate), 'dd LLL yyyy')
+                    }
+                    style={styles.listStyle}
                   />
                   <Divider />
                 </View>
@@ -76,14 +97,12 @@ const Profile = () => {
 export default Profile;
 
 const styles = StyleSheet.create({
-  container: {
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    flex: 1,
+  topNavigation: {
+    backgroundColor: theme.palette.p8,
   },
   dropContainer: {
     backgroundColor: theme.palette.p8,
-    height: 120,
+    height: 80,
     borderBottomLeftRadius: 80,
     borderBottomRightRadius: 80,
   },
@@ -97,5 +116,8 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     backgroundColor: 'transparent',
     borderColor: theme.colors.link,
+  },
+  listStyle: {
+    width: '100%',
   },
 });

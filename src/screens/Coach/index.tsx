@@ -9,8 +9,8 @@ import {
   Divider,
 } from '@ui-kitten/components';
 
-import {Person} from 'src/assets';
-import {AppLayout, View, Space} from 'src/components';
+import {Person, Delete} from 'src/assets';
+import {AppLayout, View, Space, IconButton, ConfirmModal} from 'src/components';
 import {useAuthentication} from 'src/context';
 import {useToggle} from 'src/hooks';
 
@@ -19,7 +19,9 @@ import AddPersonModal from './AddPersonModal';
 const Coach = () => {
   const {isAuthenticated, handleSignOut, profile} = useAuthentication();
   const [visible, setVisible] = useToggle(false);
+  const [confirmModal, toggleConfirmModal] = useToggle(false);
   // console.log(profile?.players ?? []);
+
   return (
     <>
       <AppLayout>
@@ -39,6 +41,12 @@ const Coach = () => {
                       <ListItem
                         title={item.name}
                         description={item.role?.join(', ').toLocaleLowerCase()}
+                        accessoryRight={() => (
+                          <IconButton
+                            icon={<Delete />}
+                            onPress={toggleConfirmModal}
+                          />
+                        )}
                         accessoryLeft={() =>
                           item?.photo ? (
                             <Avatar
@@ -74,6 +82,14 @@ const Coach = () => {
       </AppLayout>
       {visible && (
         <AddPersonModal visible={visible} type="player" onCancel={setVisible} />
+      )}
+      {confirmModal && (
+        <ConfirmModal
+          title={'Are you sure you want to delete player?'}
+          onCancel={toggleConfirmModal}
+          visible={confirmModal}
+          onConfirm={toggleConfirmModal}
+        />
       )}
     </>
   );

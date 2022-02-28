@@ -25,6 +25,7 @@ const palette = {
 const evaThemes = {
   'color-primary-default': palette.p3,
   'color-primary-default-border': palette.p3,
+  'color-primary-500': palette.p3,
   'color-primary-active': palette.p10,
   'color-primary-disabled': palette.p12,
   'text-basic-color': palette.p5,

@@ -11,10 +11,14 @@ import {Immutable} from 'immer';
 import Toast from 'react-native-toast-message';
 import {useImmer} from 'use-immer';
 
-import {auth, FirebaseAuthTypes, db} from 'src/firebase';
+import {
+  auth,
+  FirebaseAuthTypes,
+  db,
+  FirebaseFirestoreTypes,
+} from 'src/firebase';
 import {useToggle} from 'src/hooks';
 import {UserProfile} from 'src/types';
-
 interface AuthContextValue {
   isAuthenticated: boolean;
   toggleAuthState: () => void;
@@ -57,11 +61,6 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     () => setIsAuthenticated(prevState => !prevState),
     [],
   );
-
-  // const toggleGuestUserState = useCallback(
-  //   () => setIsGuestUser(prevState => !prevState),
-  //   [],
-  // );
 
   const phoneLogin = useCallback(
     async (phoneNumber: string) => {
@@ -110,11 +109,11 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
       isPremiumUser: false,
       coaches: [],
       players: [],
+      createdDate: new Date().toISOString(),
     };
 
     try {
       await db.collection('users').doc(uid).set(userObj);
-      // await db.collection('users').doc('preferences').set(userObj);
       Toast.show({
         type: 'info',
         text1: 'Welcome on board!',
@@ -151,8 +150,6 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
             text1: 'Welcome back!',
           });
         }
-        // toggleAuthState();
-        // toggleGuestUserState();
       } catch (e) {
         if (e instanceof Error) {
           console.error('confirmOtpLogin', e.message);
@@ -174,7 +171,6 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     toggleLoading();
     try {
       await auth.signInAnonymously();
-      // setIsGuestUser(true);
       Toast.show({
         type: 'info',
         text2: 'Welcome guest user!',
@@ -255,6 +251,18 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     fetchUserProfile();
   }, [setProfile, userId, isAuthenticated]);
 
+  function onResult(
+    QuerySnapshot: FirebaseFirestoreTypes.DocumentSnapshot<FirebaseFirestoreTypes.DocumentData>,
+  ) {
+    if (isAuthenticated && userId) {
+      setProfile(QuerySnapshot.data() as UserProfile);
+    }
+  }
+
+  function onError(error: Error) {
+    console.error('Profile Listener', error);
+  }
+
   useEffect(() => {
     const subscriber = auth.onAuthStateChanged(userState => {
       handleOnAuthStateChanged(userState);
@@ -263,6 +271,16 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     return subscriber;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const subscriber = db
+      .collection('users')
+      .doc(userId)
+      .onSnapshot(onResult, onError);
+
+    return () => subscriber();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   const value = {
     isAuthenticated,

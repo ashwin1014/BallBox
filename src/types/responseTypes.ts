@@ -40,24 +40,31 @@ interface BowlerSession {
   balls: Array<Ball>;
 }
 
-// type Shot = {
-//   shotType: string;
-//   inAir: boolean;
-//   runs?: number;
-// };
-
-// type Out = {
-//   isOut: boolean;
-//   outType?: string;
-//   caughtAt?: string;
-// };
-
 type Ball = {
   playerId?: string;
   playerName?: string;
   deliveryNumber: number;
   accuracy?: string;
   length?: string;
+  runs?: number;
+  wicketType?: string;
+};
+
+interface BattingSession {
+  userId: string | undefined;
+  sessionId: string;
+  startTime: string;
+  endTime: string;
+  type: 'batting';
+  shot: Array<Shot>;
+}
+
+type Shot = {
+  playerId?: string;
+  playerName?: string;
+  deliveryNumber: number;
+  accuracy?: string;
+  stroke?: string;
   runs?: number;
   wicketType?: string;
 };
@@ -75,4 +82,13 @@ type KeyValue = {
 
 export {Roles};
 
-export type {UserProfile, Coach, Player, Ball, KeyValue, BowlerSession};
+export type {
+  UserProfile,
+  Coach,
+  Player,
+  Ball,
+  KeyValue,
+  BowlerSession,
+  BattingSession,
+  Shot,
+};

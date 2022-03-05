@@ -67,13 +67,13 @@ const Bowler = () => {
   const handleSheetOpen = (): void => bottomSheetRef?.current?.expand();
 
   const handleDeliveryCounter = () => setDeliveryNumber(prev => prev + 1);
+
   const handleStateReset = useCallback(
     (isEnd = false) => {
       setBallDetail(INIT_STATE_DETAIL);
       setAccuracyDetail(INIT_STATE_ACC);
       if (isEnd) {
         setBalls([]);
-        // setEndActiveSession(false);
       }
     },
     [setBalls],
@@ -123,9 +123,9 @@ const Bowler = () => {
       setLoading(true);
       try {
         await db
-          .collection('bowling_session')
+          .collection('session')
           .doc(userId)
-          .collection('user_bowling_session')
+          .collection('bowling_session')
           .doc(sessionPayload.sessionId)
           .set(sessionPayload);
         Toast.show({
@@ -306,7 +306,6 @@ const Bowler = () => {
           visible={endSessionConfirm}
           onCancel={toggleEndSessionConfirm}
           onConfirm={confirmSessionEnd}
-          // onModalClose={saveSessionDetails}
           title="Are you sure you want to end ongoing session?"
         />
       )}
@@ -315,7 +314,6 @@ const Bowler = () => {
           visible={cancelSessionConfirm}
           onCancel={toggleCancelSessionConfirm}
           onConfirm={() => handleCancelSession(true)}
-          // onModalClose={saveSessionDetails}
           title="Are you sure you want to cancel ongoing session?"
         />
       )}

@@ -12,6 +12,8 @@ target 'BallBox' do
     :hermes_enabled => true
   )
 
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'BallBoxTests' do
     inherit! :complete
     # Pods for testing

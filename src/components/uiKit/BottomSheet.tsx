@@ -67,7 +67,7 @@ const BottomSheet = forwardRef<RnBottomSheet, BottomSheetProps>(
         animateOnMount
         // onClose={onClose}
         backdropComponent={renderBackdrop}
-        // backgroundStyle={styles.backgroundStyle}
+        backgroundStyle={styles.backgroundStyle}
         // handleIndicatorStyle={styles.handleIndicator}
         enablePanDownToClose
         onChange={onSheetChange}
@@ -99,7 +99,6 @@ const BottomSheet = forwardRef<RnBottomSheet, BottomSheetProps>(
 export default BottomSheet;
 
 BottomSheet.defaultProps = {
-  snapPoints: ['2%', '40%'],
   onSheetChange: noop,
   title: '',
   children: null,
@@ -108,8 +107,10 @@ BottomSheet.defaultProps = {
 const styles = StyleSheet.create({
   bottomSheetContentContainer: {
     alignItems: 'center',
-    // flex: 1,
-    // height: '100%',
+  },
+  backgroundStyle: {
+    backgroundColor: 'pink',
+    height: '100%',
   },
   header: {
     padding: 10,

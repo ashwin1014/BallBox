@@ -126,6 +126,7 @@ const Batsman = () => {
           .collection('session')
           .doc(userId)
           .collection('batting_session')
+          // .add(sessionPayload);
           .doc(sessionPayload.sessionId)
           .set(sessionPayload);
         Toast.show({

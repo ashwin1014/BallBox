@@ -255,6 +255,7 @@ const AuthProvider = ({children}: {children: ReactNode}) => {
     QuerySnapshot: FirebaseFirestoreTypes.DocumentSnapshot<FirebaseFirestoreTypes.DocumentData>,
   ) {
     if (isAuthenticated && userId) {
+      // console.log('listener', QuerySnapshot.data());
       setProfile(QuerySnapshot.data() as UserProfile);
     }
   }

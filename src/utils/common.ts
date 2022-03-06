@@ -45,4 +45,22 @@ const isEmpty = (obj: any): boolean =>
 
 const noop: () => void = () => {};
 
-export {consoleLogger, times, uniqueObjArray, isEmpty, noop};
+type ValueGetter<T = any> = (item: T) => string | number | Date;
+type SortingOrder = 'ascending' | 'descending';
+interface Item<T = any> {
+  [key: string]: T;
+}
+
+const sortBy = <T extends Item>(
+  array: T[],
+  key: ValueGetter<T>,
+  order: SortingOrder = 'ascending',
+) => {
+  const sortedData = [...array].sort((a, b) => (key(a) > key(b) ? 1 : -1));
+  if (order === 'ascending') {
+    return sortedData;
+  }
+  return sortedData.reverse();
+};
+
+export {consoleLogger, times, uniqueObjArray, isEmpty, noop, sortBy};

@@ -123,6 +123,7 @@ AddPersonModalProps) => {
             <Input
               value={player.number}
               label="Player Number"
+              accessoryLeft={() => <Text>+91</Text>}
               style={styles.gap}
               onChangeText={nextValue => handleAddPlayer(nextValue, 'number')}
             />

@@ -67,6 +67,12 @@ const Delete = (props?: Partial<ImageProps>): ReactElement<ImageProps> => (
   <Icon {...props} name="trash-2-outline" />
 );
 
+const ChevronRight = (
+  props?: Partial<ImageProps>,
+): ReactElement<ImageProps> => (
+  <Icon {...props} name="arrow-ios-forward-outline" />
+);
+
 export {
   HeartIcon,
   BackIcon,
@@ -82,4 +88,5 @@ export {
   Edit,
   Logout,
   Delete,
+  ChevronRight,
 };

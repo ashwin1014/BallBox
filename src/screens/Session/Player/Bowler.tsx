@@ -126,6 +126,7 @@ const Bowler = () => {
           .collection('session')
           .doc(userId)
           .collection('bowling_session')
+          // .add(sessionPayload);
           .doc(sessionPayload.sessionId)
           .set(sessionPayload);
         Toast.show({

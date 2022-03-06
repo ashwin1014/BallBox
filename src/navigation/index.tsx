@@ -26,7 +26,9 @@ import {
   Coach,
   Session,
   Profile,
+  SessionDetail,
 } from 'src/screens';
+import {BattingSession, BowlerSession} from 'src/types';
 
 import {navigationRef} from './utils';
 
@@ -38,6 +40,10 @@ type NavigationParamList = {
   [MAIN_STACK.PRIVACY]: undefined;
   [MAIN_STACK.TABS]: undefined;
   [MAIN_STACK.PROFILE]: undefined;
+  [MAIN_STACK.SESSION_DETAILS]: {
+    session: BattingSession | BowlerSession;
+    sessionType: 'batting' | 'bowling';
+  };
 };
 
 type BottomTabParamsList = {
@@ -99,6 +105,7 @@ const AppStack = () => (
     initialRouteName={MAIN_STACK.TABS}>
     <Stack.Screen name={MAIN_STACK.TABS} component={TabNavigator} />
     <Stack.Screen name={MAIN_STACK.PROFILE} component={Profile} />
+    <Stack.Screen name={MAIN_STACK.SESSION_DETAILS} component={SessionDetail} />
   </Stack.Navigator>
 );
 

@@ -4,6 +4,7 @@ enum MAIN_STACK {
   PRIVACY = 'PrivacyPolicy',
   TABS = 'Tabs',
   PROFILE = 'Profile',
+  SESSION_DETAILS = 'SessionDetails',
 }
 
 enum SESSION_TABS {
